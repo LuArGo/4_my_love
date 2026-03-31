@@ -247,10 +247,11 @@ body::before {
 /* ───── CARTA ABERTA ────────────────────────────────────── */
 #ol {
   display:none;
-  margin-top:clamp(1.2rem, 4vw, 2.5rem);
-  width:min(680px, 96vw);
+  margin-top:clamp(.8rem, 2vw, 1.8rem);
+  width:min(860px, 97vw);
+  min-height:calc(100dvh - var(--HH) - 3rem);
   background:var(--paper); border-radius:3px;
-  padding:clamp(2rem, 5.5vw, 3.8rem) clamp(1.5rem, 5vw, 3.5rem);
+  padding:clamp(1.8rem, 4.5vw, 3.5rem) clamp(1.2rem, 4vw, 3.2rem);
   box-shadow:
     0 10px 48px rgba(93,64,55,.18),
     0 2px 8px rgba(93,64,55,.1),
@@ -277,8 +278,8 @@ body::before {
 /* conteúdo digitado */
 #lb {
   font-family:'Courier Prime', monospace;
-  font-size:clamp(.88rem, 2.4vw, 1.02rem);
-  line-height:2.05;
+  font-size:clamp(.95rem, 2.6vw, 1.08rem);
+  line-height:2.1;
   color:var(--brD);
   min-height:160px;
   position:relative; z-index:1;
@@ -493,9 +494,8 @@ const sig = document.getElementById('sig');
 let isOpen   = false;
 let playing  = false;
 let finished = false;
-let timers   = [];
-let tyTimer  = null;
-let activeCursor = null;
+let timers   = [];   /* apenas para o setTimeout do "Aumente o volume" */
+let rafId    = null; /* requestAnimationFrame handle */
  
 /* ══════════════════════════════════════════════════════════
    HELPER: ATUALIZA CABEÇALHO COM FADE
@@ -616,7 +616,127 @@ function openLetter() {
 }
  
 /* ══════════════════════════════════════════════════════════
-   INICIAR MÚSICA E SINCRONIZAÇÃO
+   PRÉ-PROCESSAMENTO DOS EVENTOS DE TEXTO
+   Calcula: endT, needsGap, e inicializa estado por evento.
+══════════════════════════════════════════════════════════ */
+const textEvents = (function() {
+  const arr = [];
+  let pendingGap = false;
+  EV.forEach(ev => {
+    if (ev.bl) pendingGap = true;
+    if (ev.tx != null) {
+      ev.needsGap  = pendingGap;
+      pendingGap   = false;
+      ev.lineEl    = null;  /* elemento DOM criado quando a linha aparece */
+      ev._lastChars = -1;  /* chars renderizados no último frame */
+      arr.push(ev);
+    }
+  });
+  arr.forEach((ev, i) => {
+    ev.endT = i < arr.length - 1 ? arr[i + 1].t : MEND;
+  });
+  return arr;
+})();
+ 
+/* estado do loop RAF */
+let lastLyrIdx  = -1;
+let addedLines  = -1; /* índice do último textEvent já inserido no DOM */
+let cursorEl    = null;
+ 
+/* ══════════════════════════════════════════════════════════
+   LOOP DE SINCRONIA (requestAnimationFrame)
+   Fonte de verdade: audio.currentTime — nunca desvia.
+══════════════════════════════════════════════════════════ */
+function syncLoop() {
+  if (!playing || finished) return;
+ 
+  const t = AM.currentTime * 1000; /* ms */
+ 
+  /* ── Karaoke: atualiza legenda ── */
+  let lyrIdx = -1;
+  for (let i = EV.length - 1; i >= 0; i--) {
+    if (t >= EV[i].t) { lyrIdx = i; break; }
+  }
+  if (lyrIdx !== lastLyrIdx) {
+    lastLyrIdx = lyrIdx;
+    if (lyrIdx >= 0) {
+      const newTxt = EV[lyrIdx].ly;
+      if (hm.textContent !== newTxt) {
+        hm.style.transition = 'opacity .2s';
+        hm.style.opacity = '0';
+        setTimeout(() => {
+          hm.className = 'lyr';
+          hm.textContent = newTxt;
+          hm.style.opacity = '1';
+        }, 200);
+      }
+    }
+  }
+ 
+  /* ── Typewriter: determina evento de texto atual ── */
+  let txtIdx = -1;
+  for (let i = textEvents.length - 1; i >= 0; i--) {
+    if (t >= textEvents[i].t) { txtIdx = i; break; }
+  }
+ 
+  /* Cria elementos DOM para todas as linhas até a atual */
+  while (addedLines < txtIdx) {
+    addedLines++;
+    const ev = textEvents[addedLines];
+ 
+    if (ev.needsGap) {
+      const gap = document.createElement('span');
+      gap.className = 'lb-gap';
+      lb.appendChild(gap);
+    }
+ 
+    const line = document.createElement('span');
+    line.className = 'll';
+    lb.appendChild(line);
+    ev.lineEl = line;
+ 
+    /* Linhas anteriores à atual ficam completas imediatamente */
+    if (addedLines < txtIdx) {
+      line.textContent = ev.tx;
+      ev._lastChars = ev.tx.length;
+    }
+  }
+ 
+  /* Atualiza a linha atual, caractere a caractere */
+  if (txtIdx >= 0) {
+    const ev = textEvents[txtIdx];
+    if (ev.lineEl) {
+      const elapsed    = Math.max(0, t - ev.t);
+      const totalTime  = ev.endT - ev.t;
+      /* velocidade: termina em ~78% do tempo disponível, máx 68 ms/char */
+      const charDelay  = Math.min(68, totalTime * 0.78 / ev.tx.length);
+      const chars      = Math.min(Math.floor(elapsed / charDelay), ev.tx.length);
+ 
+      if (chars !== ev._lastChars) {
+        ev._lastChars = chars;
+        ev.lineEl.textContent = ev.tx.slice(0, chars);
+ 
+        if (chars < ev.tx.length) {
+          /* cursor ativo nesta linha */
+          if (!cursorEl) {
+            cursorEl = document.createElement('span');
+            cursorEl.className = 'cur';
+          }
+          ev.lineEl.appendChild(cursorEl);
+          ev.lineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          /* linha concluída — remove cursor */
+          if (cursorEl && cursorEl.parentNode === ev.lineEl) cursorEl.remove();
+        }
+      }
+    }
+  }
+ 
+  rafId = requestAnimationFrame(syncLoop);
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   INICIAR MÚSICA
 ══════════════════════════════════════════════════════════ */
 function startMusic() {
   if (playing) return;
@@ -625,68 +745,12 @@ function startMusic() {
   AM.currentTime = 0;
   AM.play().catch(() => {});
  
-  EV.forEach((ev, i) => {
-    timers.push(setTimeout(() => {
- 
-      /* atualizar legenda */
-      setHdr(ev.ly, 'lyr');
- 
-      /* linha em branco (separador de estrofe) */
-      if (ev.bl) {
-        const gap = document.createElement('span');
-        gap.className = 'lb-gap';
-        lb.appendChild(gap);
-      }
- 
-      /* digitar linha na carta */
-      if (ev.tx != null) {
-        /* calcular duração disponível até próxima linha */
-        let nextT = MEND;
-        for (let j = i + 1; j < EV.length; j++) {
-          if (EV[j].tx != null) { nextT = EV[j].t; break; }
-        }
-        const dur = Math.max(nextT - ev.t - 200, 700);
-        typeLine(ev.tx, dur);
-      }
- 
-    }, ev.t));
-  });
- 
-  /* guardar para fallback */
+  /* fallback caso o evento 'ended' não dispare */
   timers.push(setTimeout(() => { if (!finished) finishMusic(); }, MEND));
   AM.addEventListener('ended', () => { if (!finished) finishMusic(); }, { once: true });
-}
  
-/* ══════════════════════════════════════════════════════════
-   MÁQUINA DE ESCREVER
-══════════════════════════════════════════════════════════ */
-function typeLine(txt, avail) {
-  /* cancelar cursor anterior */
-  if (tyTimer)      clearTimeout(tyTimer);
-  if (activeCursor) { activeCursor.remove(); activeCursor = null; }
- 
-  const line = document.createElement('span');
-  line.className = 'll';
-  lb.appendChild(line);
- 
-  const cur = document.createElement('span');
-  cur.className = 'cur';
-  activeCursor  = cur;
-  line.appendChild(cur);
- 
-  /* delay por caractere: máx 70ms, mín 28ms; sempre termina antes da próxima linha */
-  const delay = Math.max(Math.min(Math.floor(avail * 0.83 / txt.length), 70), 28);
-  let i = 0;
- 
-  function step() {
-    if (i < txt.length) {
-      cur.insertAdjacentText('beforebegin', txt[i++]);
-      /* rolar para acompanhar a digitação */
-      line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      tyTimer = setTimeout(step, delay);
-    }
-  }
-  tyTimer = setTimeout(step, 0);
+  /* iniciar loop de sincronia */
+  rafId = requestAnimationFrame(syncLoop);
 }
  
 /* ══════════════════════════════════════════════════════════
@@ -696,8 +760,11 @@ function finishMusic() {
   if (finished) return;
   finished = true;
  
+  /* parar loop RAF */
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+ 
   /* remover cursor */
-  if (activeCursor) { activeCursor.remove(); activeCursor = null; }
+  if (cursorEl) { cursorEl.remove(); cursorEl = null; }
  
   /* mostrar assinatura */
   sig.classList.add('on');
@@ -719,14 +786,22 @@ function closeLetter() {
   if (!isOpen) return;
   isOpen = false;
  
-  /* parar timers e áudio */
+  /* parar RAF e timers */
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   timers.forEach(clearTimeout);
   timers = [];
-  if (tyTimer) clearTimeout(tyTimer);
+ 
+  /* parar áudio */
   AM.pause(); AM.currentTime = 0;
   AB.pause(); AB.currentTime = 0;
-  playing  = false;
-  finished = false;
+ 
+  /* resetar estado de sincronia */
+  playing     = false;
+  finished    = false;
+  lastLyrIdx  = -1;
+  addedLines  = -1;
+  cursorEl    = null;
+  textEvents.forEach(ev => { ev.lineEl = null; ev._lastChars = -1; });
  
   /* animar carta aberta saindo */
   ol.style.transition = 'opacity .4s ease, transform .4s ease';
