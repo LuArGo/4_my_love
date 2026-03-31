@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Carol</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+/* ───── VARIÁVEIS ───────────────────────────────────────── */
+:root {
+  --bg:      #fce4ec;
+  --bg2:     #f8bbd0;
+  --br:      #5d4037;
+  --brL:     #8d6e63;
+  --brD:     #3e2723;
+  --cream:   #fffdf7;
+  --paper:   #fefaf3;
+  --HH:      60px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--br);
+  font-family:'Playfair Display', serif;
+  overflow-x:hidden;
+}
+ 
+/* gradiente suave de fundo */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse at 8% 92%,  rgba(248,187,208,.6) 0%, transparent 44%),
+    radial-gradient(ellipse at 92% 6%,  rgba(252,228,236,.8) 0%, transparent 44%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,240,245,.3) 0%, transparent 70%);
+  pointer-events:none;
+}
+ 
+/* ───── CORAÇÕES FLUTUANTES ─────────────────────────────── */
+#fh { position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.fh {
+  position:absolute; bottom:-60px;
+  color:var(--brL); opacity:.09;
+  animation:fhUp linear infinite;
+  will-change:transform;
+}
+@keyframes fhUp {
+  0%   { transform:translateY(0) rotate(0deg); opacity:0; }
+  6%   { opacity:.09; }
+  94%  { opacity:.06; }
+  100% { transform:translateY(-115vh) rotate(30deg); opacity:0; }
+}
+ 
+/* ───── TELA DE BLOQUEIO ────────────────────────────────── */
+#lock {
+  position:relative; z-index:10;
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:2rem; gap:0;
+  animation:fadeInPage .8s ease both;
+}
+@keyframes fadeInPage {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:none; }
+}
+ 
+.ldeco {
+  font-size:1.9rem; letter-spacing:.9rem;
+  margin-bottom:1.8rem; opacity:.45;
+  animation:fadeInPage .8s .2s ease both;
+}
+.ltitle {
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(1.45rem, 5vw, 2.3rem);
+  color:var(--brD);
+  text-align:center; line-height:1.5;
+  margin-bottom:.55rem;
+  animation:fadeInPage .8s .3s ease both;
+}
+.lhint {
+  font-size:clamp(.75rem, 2vw, .95rem);
+  color:var(--brL); font-style:italic;
+  text-align:center; margin-bottom:2.6rem;
+  animation:fadeInPage .8s .4s ease both;
+}
+.lform {
+  display:flex; flex-direction:column;
+  align-items:center; gap:.9rem;
+  width:100%; max-width:290px;
+  animation:fadeInPage .8s .5s ease both;
+}
+#ci {
+  width:100%;
+  padding:.88rem 1.5rem;
+  border:2px solid rgba(93,64,55,.38);
+  border-radius:50px;
+  background:rgba(255,255,255,.62);
+  font-family:'Courier Prime', monospace;
+  font-size:1.3rem; letter-spacing:.36rem;
+  text-align:center; color:var(--brD);
+  outline:none;
+  transition:border-color .3s, box-shadow .3s;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+#ci:focus {
+  border-color:var(--br);
+  box-shadow:0 0 0 4px rgba(93,64,55,.11);
+}
+#ci.shake {
+  animation:shake .42s ease;
+  border-color:#c62828;
+}
+@keyframes shake {
+  0%,100%{ transform:translateX(0); }
+  18%{ transform:translateX(-9px); }
+  36%{ transform:translateX(9px); }
+  54%{ transform:translateX(-6px); }
+  72%{ transform:translateX(5px); }
+}
+#ubtn {
+  padding:.72rem 2.6rem;
+  background:var(--br); color:#fff8f4;
+  border:none; border-radius:50px;
+  font-family:'Dancing Script', cursive;
+  font-size:1.4rem; cursor:pointer;
+  box-shadow:0 4px 14px rgba(62,39,35,.26);
+  transition:background .22s, transform .15s, box-shadow .22s;
+}
+#ubtn:hover {
+  background:var(--brD); transform:scale(1.05);
+  box-shadow:0 6px 18px rgba(62,39,35,.3);
+}
+#ubtn:active { transform:scale(.96); }
+.emsg {
+  font-size:.83rem; color:#c62828; font-style:italic;
+  text-align:center; min-height:1.2em;
+  opacity:0; transition:opacity .3s;
+}
+.emsg.on { opacity:1; }
+ 
+/* ───── TELA DA CARTA ───────────────────────────────────── */
+#ls { display:none; flex-direction:column; min-height:100vh; position:relative; z-index:10; }
+#ls.on { display:flex; }
+ 
+/* cabeçalho fixo */
+#hdr {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:var(--HH);
+  background:rgba(252,228,236,.94);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(93,64,55,.13);
+  display:flex; align-items:center; justify-content:center;
+  padding:0 1.2rem;
+}
+#hm {
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(.95rem, 3.2vw, 1.38rem);
+  color:var(--br); text-align:center;
+  transition:opacity .28s ease;
+  line-height:1.3;
+}
+/* modo volume */
+#hm.vol {
+  font-size:clamp(1.1rem, 3.8vw, 1.65rem);
+  font-weight:700; color:var(--brD);
+  animation:hpulse 1.1s ease-in-out infinite;
+}
+@keyframes hpulse { 0%,100%{ opacity:1; } 50%{ opacity:.62; } }
+/* modo legenda */
+#hm.lyr {
+  font-family:'Playfair Display', serif;
+  font-style:italic;
+  font-size:clamp(.82rem, 2.5vw, 1.05rem);
+  color:var(--brL);
+}
+ 
+/* área principal */
+#lm {
+  flex:1;
+  padding-top:var(--HH);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-bottom:3.5rem;
+}
+ 
+/* ───── CARTA FECHADA ───────────────────────────────────── */
+#cl {
+  position:relative;
+  margin-top:clamp(2rem, 6vw, 4rem);
+  width:min(340px, 88vw);
+  background:var(--paper);
+  border-radius:3px;
+  padding:2.9rem 2.6rem 2.6rem;
+  text-align:center;
+  box-shadow:
+    0 6px 30px rgba(93,64,55,.18),
+    0 1px 6px rgba(93,64,55,.08),
+    inset 0 0 0 1px rgba(93,64,55,.07);
+  background-image:
+    repeating-linear-gradient(
+      transparent, transparent 27px,
+      rgba(93,64,55,.05) 27px, rgba(93,64,55,.05) 28px);
+}
+#cl::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.38) 0%, transparent 55%);
+  pointer-events:none; border-radius:3px;
+}
+.clt { font-size:clamp(1.55rem, 5vw, 2rem); font-weight:600; color:var(--brD); margin-bottom:.3rem; }
+.cls { font-size:.9rem; font-style:italic; color:var(--brL); margin-bottom:2.4rem; }
+ 
+/* ── SELO DE CERA ── */
+#seal {
+  display:inline-block; cursor:pointer;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.22));
+  transition:transform .32s ease, filter .32s ease;
+  user-select:none; -webkit-tap-highlight-color:transparent;
+  will-change:transform;
+}
+#seal:hover { transform:scale(1.11) rotate(-5deg); filter:drop-shadow(0 8px 18px rgba(0,0,0,.3)); }
+#seal:active { transform:scale(.92) rotate(2deg); }
+.seal-hint {
+  display:block; margin-top:.55rem;
+  font-family:'Dancing Script', cursive;
+  font-size:.72rem; color:var(--brL);
+  opacity:.7;
+}
+ 
+.clfrom {
+  position:absolute; bottom:1.25rem; left:1.5rem;
+  text-align:left; line-height:1.7;
+}
+.clfrom span {
+  display:block;
+  font-family:'Dancing Script', cursive;
+  font-size:.76rem; color:var(--brL);
+}
+ 
+/* ───── CARTA ABERTA ────────────────────────────────────── */
+#ol {
+  display:none;
+  margin-top:clamp(1.2rem, 4vw, 2.5rem);
+  width:min(680px, 96vw);
+  background:var(--paper); border-radius:3px;
+  padding:clamp(2rem, 5.5vw, 3.8rem) clamp(1.5rem, 5vw, 3.5rem);
+  box-shadow:
+    0 10px 48px rgba(93,64,55,.18),
+    0 2px 8px rgba(93,64,55,.1),
+    inset 0 0 0 1px rgba(93,64,55,.07);
+  background-image:
+    repeating-linear-gradient(
+      transparent, transparent 32px,
+      rgba(93,64,55,.042) 32px, rgba(93,64,55,.042) 33px);
+  position:relative;
+}
+#ol::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.28) 0%, transparent 50%);
+  pointer-events:none; border-radius:3px;
+}
+#ol.on { display:block; }
+ 
+.orn {
+  text-align:center; font-size:1.25rem;
+  margin-bottom:2rem; opacity:.4;
+  letter-spacing:.5rem;
+}
+ 
+/* conteúdo digitado */
+#lb {
+  font-family:'Courier Prime', monospace;
+  font-size:clamp(.88rem, 2.4vw, 1.02rem);
+  line-height:2.05;
+  color:var(--brD);
+  min-height:160px;
+  position:relative; z-index:1;
+}
+.ll      { display:block; min-height:1.9em; }
+.lb-gap  { display:block; height:1.5em; }
+ 
+/* cursor piscante */
+.cur {
+  display:inline-block;
+  width:2px; height:.85em;
+  background:var(--br);
+  margin-left:1px;
+  vertical-align:middle;
+  animation:blink .85s step-end infinite;
+}
+@keyframes blink { 50%{ opacity:0; } }
+ 
+/* assinatura */
+#sig {
+  margin-top:3rem; text-align:right;
+  opacity:0; transition:opacity 1.3s ease;
+  cursor:pointer; user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  position:relative; z-index:1;
+}
+#sig.on { opacity:1; }
+#sig:hover { opacity:.72; }
+#sig span {
+  display:block;
+  font-family:'Dancing Script', cursive;
+  color:var(--br); line-height:1.8;
+}
+.sn { font-size:clamp(1.05rem, 3vw, 1.35rem); font-weight:700; }
+.st { font-size:clamp(.78rem, 1.9vw, .92rem); font-style:italic; color:var(--brL); }
+ 
+/* ───── SCROLLBAR ───────────────────────────────────────── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--brL); border-radius:3px; }
+</style>
+</head>
+<body>
+ 
+<!-- Corações de fundo -->
+<div id="fh"></div>
+ 
+<!-- ═══════════════ TELA DE BLOQUEIO ═══════════════ -->
+<div id="lock">
+  <div class="ldeco">🌸 💌 🌸</div>
+  <h1 class="ltitle">Digite o código para<br>receber seu presente:</h1>
+  <p class="lhint">Dica: o dia que nasceu o amor da minha vida.</p>
+  <div class="lform">
+    <input
+      type="tel" id="ci"
+      maxlength="8" placeholder="DDMMAAAA"
+      autocomplete="off" inputmode="numeric"
+    >
+    <button id="ubtn">Abrir ✉️</button>
+    <p class="emsg" id="em">Código incorreto, tente de novo 💔</p>
+  </div>
+</div>
+ 
+<!-- ═══════════════ TELA DA CARTA ═══════════════ -->
+<div id="ls">
+ 
+  <!-- cabeçalho fixo -->
+  <header id="hdr">
+    <div id="hm">Toque no selo para abrir!</div>
+  </header>
+ 
+  <main id="lm">
+ 
+    <!-- Carta fechada -->
+    <div id="cl">
+      <div class="clt">Feliz Aniversário</div>
+      <div class="cls">amor da minha vida</div>
+ 
+      <!-- Selo de cera SVG -->
+      <div id="seal" role="button" tabindex="0" aria-label="Toque para abrir a carta">
+        <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="sg" cx="36%" cy="30%" r="70%">
+              <stop offset="0%"   stop-color="#cc2e2e"/>
+              <stop offset="55%"  stop-color="#8b1a1a"/>
+              <stop offset="100%" stop-color="#500000"/>
+            </radialGradient>
+            <radialGradient id="gls" cx="35%" cy="28%" r="45%">
+              <stop offset="0%"   stop-color="rgba(255,255,255,.22)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- sombra -->
+          <ellipse cx="50" cy="56" rx="36" ry="8" fill="rgba(0,0,0,.14)"/>
+          <!-- corpo principal -->
+          <circle cx="50" cy="49" r="38" fill="#7b1515"/>
+          <circle cx="50" cy="49" r="38" fill="url(#sg)"/>
+          <!-- anel interno pontilhado -->
+          <circle cx="50" cy="49" r="33" fill="none"
+                  stroke="#d44444" stroke-width="1.2"
+                  stroke-dasharray="3.2 2.4" opacity=".55"/>
+          <!-- brilho de cera -->
+          <circle cx="50" cy="49" r="38" fill="url(#gls)"/>
+          <!-- coração -->
+          <path d="M50 68
+                   C50 68 26 53 26 38
+                   C26 30 33 26 40 30
+                   C43 32 46 35 50 39
+                   C54 35 57 32 60 30
+                   C67 26 74 30 74 38
+                   C74 53 50 68 50 68Z"
+                fill="#fce4ec" opacity=".93"/>
+          <!-- flecha — haste -->
+          <line x1="22" y1="58" x2="72" y2="34"
+                stroke="#fce4ec" stroke-width="2.6" stroke-linecap="round"/>
+          <!-- ponta (direita) -->
+          <polygon points="72,34 64,31 67,40" fill="#fce4ec"/>
+          <!-- rabo (esquerda) -->
+          <path d="M22,58 L16,52 M22,58 L16,64"
+                stroke="#fce4ec" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="seal-hint">✦ toque para abrir ✦</span>
+      </div>
+ 
+      <!-- De / Para -->
+      <div class="clfrom">
+        <span>De: Lucca</span>
+        <span>Para: meu amor</span>
+      </div>
+    </div><!-- #cl -->
+ 
+    <!-- Carta aberta -->
+    <div id="ol">
+      <div class="orn">✿ ♡ ✿</div>
+      <div id="lb"></div>
+      <div id="sig">
+        <span class="sn">Lucca A. Gomes</span>
+        <span class="st">para meu amor,</span>
+        <span class="st">M. Carolina Gama</span>
+      </div>
+    </div><!-- #ol -->
+ 
+  </main>
+</div><!-- #ls -->
+ 
+<!-- Áudios -->
+<audio id="am" src="audio/love-like-you.mp3"    preload="auto"></audio>
+<audio id="ab" src="audio/instrumental_bg.mp3"  preload="auto" loop></audio>
+ 
+<script>
+/* ══════════════════════════════════════════════════════════
+   CORAÇÕES FLUTUANTES
+══════════════════════════════════════════════════════════ */
+(function(){
+  const c = document.getElementById('fh');
+  const ch = ['♥','♡','✿','❀','✾','❣'];
+  for(let i = 0; i < 18; i++){
+    const el = document.createElement('span');
+    el.className = 'fh';
+    el.textContent = ch[i % ch.length];
+    el.style.left            = (Math.random() * 100) + 'vw';
+    el.style.fontSize        = (.55 + Math.random() * .85) + 'rem';
+    el.style.animationDuration = (14 + Math.random() * 22) + 's';
+    el.style.animationDelay    = (Math.random() * 28) + 's';
+    c.appendChild(el);
+  }
+})();
+ 
+/* ══════════════════════════════════════════════════════════
+   TELA DE BLOQUEIO
+══════════════════════════════════════════════════════════ */
+const CODE = '01041999';
+const ciEl = document.getElementById('ci');
+const emEl = document.getElementById('em');
+ 
+function tryUnlock() {
+  const val = ciEl.value.replace(/\D/g, '');
+  if (val === CODE) {
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('ls').classList.add('on');
+  } else {
+    ciEl.classList.add('shake');
+    emEl.classList.add('on');
+    ciEl.value = '';
+    setTimeout(() => ciEl.classList.remove('shake'), 460);
+  }
+}
+ 
+document.getElementById('ubtn').addEventListener('click', tryUnlock);
+ciEl.addEventListener('keydown', e => {
+  emEl.classList.remove('on');
+  if (e.key === 'Enter') tryUnlock();
+});
+ 
+/* Teclado: Enter no selo também abre */
+document.getElementById('seal').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') openLetter();
+});
+ 
+/* ══════════════════════════════════════════════════════════
+   ESTADO GERAL
+══════════════════════════════════════════════════════════ */
+const AM  = document.getElementById('am');
+const AB  = document.getElementById('ab');
+const hm  = document.getElementById('hm');
+const cl  = document.getElementById('cl');
+const ol  = document.getElementById('ol');
+const lb  = document.getElementById('lb');
+const sig = document.getElementById('sig');
+ 
+let isOpen   = false;
+let playing  = false;
+let finished = false;
+let timers   = [];
+let tyTimer  = null;
+let activeCursor = null;
+ 
+/* ══════════════════════════════════════════════════════════
+   HELPER: ATUALIZA CABEÇALHO COM FADE
+══════════════════════════════════════════════════════════ */
+function setHdr(txt, cls) {
+  hm.style.transition = 'opacity .28s ease';
+  hm.style.opacity = '0';
+  setTimeout(() => {
+    hm.className = cls || '';
+    hm.textContent = txt;
+    hm.style.transition = 'opacity .28s ease';
+    hm.style.opacity = '1';
+  }, 285);
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   DADOS DE TIMING
+   t  = ms a partir do início da música
+   ly = legenda karaoke (cabeçalho)
+   tx = texto digitado na carta (null = só instrumental)
+   bl = true → inserir linha em branco antes (separar estrofe)
+══════════════════════════════════════════════════════════ */
+const EV = [
+  /* ── Estrofe 1 ── */
+  { t:  6000, ly: 'If I could begin to be',                  tx: 'Se eu pudesse ser assim' },
+  { t: 10400, ly: 'Half of what you think of me',            tx: 'Só metade do que pensa de mim' },
+  { t: 13200, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 15600, ly: 'I could even learn how to love',          tx: 'Até aprender a amar' },
+  /* ── Refrão 1 ── */
+  { t: 19500, ly: 'When I see the way you act',              tx: 'Quando eu te vejo ir' },
+  { t: 22000, ly: "Wondering when I'm coming back",          tx: 'Pensando quando vou sair' },
+  { t: 24700, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 27300, ly: 'I could even learn how to love… like you',tx: 'Até aprender a amar como você' },
+  /* ── Instrumental 23s ── */
+  { t: 29600, ly: '♪',                                       tx: null, bl: true },
+  /* ── Estrofe 2 ── */
+  { t: 52000, ly: 'I always thought I might be bad',         tx: 'Sempre pensei que era ruim' },
+  { t: 55000, ly: "Now I'm sure that it's true",             tx: 'Agora tenho certeza' },
+  { t: 57000, ly: "'Cause I think you're so good",           tx: 'Pois você é perfeita' },
+  { t: 59500, ly: "And I'm nothing like you",                tx: 'Eu chego nem aos seus pés' },
+  { t: 62000, ly: 'Look at you go',                          tx: 'Veja você' },
+  { t: 64000, ly: 'I just adore you',                        tx: 'Como eu te adoro' },
+  { t: 66200, ly: 'I wish that I knew',                      tx: 'Só queria saber' },
+  { t: 68000, ly: 'What makes you think I\'m so special',    tx: 'Por que eu sou tão especial?' },
+  /* ── Refrão 2 ── */
+  { t: 70500, ly: 'If I could begin to do',                  tx: 'Se eu pudesse só fazer' },
+  { t: 73000, ly: 'Something that does right by you',        tx: 'A coisa certa pra você' },
+  { t: 76000, ly: 'I would do about anything',               tx: 'Qualquer coisa eu iria fazer' },
+  { t: 79000, ly: 'I would even learn how to love',          tx: 'Até aprender a amar' },
+  /* ── Instrumental 5.5s ── */
+  { t: 82500, ly: '♪',                                       tx: null, bl: true },
+  /* ── Refrão final ── */
+  { t: 87500, ly: 'When I see the way you look',             tx: 'Quando te vejo me olhar' },
+  { t: 90800, ly: 'Shaken by how long it took',              tx: 'Feliz por me ver voltar' },
+  { t: 93500, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 96000, ly: 'I could even learn how to love… like you',tx: 'Até aprender a amar como você' },
+  /* ── Instrumental 4s ── */
+  { t:100500, ly: '♪',                                       tx: null, bl: true },
+  /* ── Outro ── */
+  { t:104000, ly: 'Love like you',                           tx: 'Amar como você' },
+  /* ── Instrumental 4s ── */
+  { t:108500, ly: '♪',                                       tx: null, bl: true },
+  { t:112000, ly: 'Love me like you',                        tx: 'Amar a mim como você' },
+  /* ── Instrumental final 17s ── */
+  { t:129000, ly: '♪',                                       tx: null },
+];
+ 
+/* Duração total estimada da música (fallback se 'ended' não disparar) */
+const MEND = 158000;
+ 
+/* ══════════════════════════════════════════════════════════
+   ABRIR CARTA
+══════════════════════════════════════════════════════════ */
+document.getElementById('seal').addEventListener('click', openLetter);
+ 
+function openLetter() {
+  if (isOpen) return;
+  isOpen = true;
+ 
+  /* animar carta fechada saindo */
+  cl.style.transition = 'opacity .42s ease, transform .42s ease';
+  cl.style.opacity    = '0';
+  cl.style.transform  = 'scale(.86) translateY(-10px)';
+ 
+  setTimeout(() => {
+    cl.style.display = 'none';
+ 
+    /* preparar carta aberta */
+    lb.innerHTML = '';
+    sig.classList.remove('on');
+    ol.style.opacity   = '0';
+    ol.style.transform = 'scale(.91) translateY(18px)';
+    ol.style.transition = 'opacity .55s ease, transform .55s ease';
+    ol.classList.add('on');
+ 
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ol.style.opacity   = '1';
+      ol.style.transform = 'none';
+    }));
+ 
+    /* mostrar aviso de volume */
+    setHdr('🔊 Aumente o volume! 🔊', 'vol');
+ 
+    /* após 3s: iniciar música */
+    timers.push(setTimeout(() => {
+      hm.style.transition = 'opacity .65s ease';
+      hm.style.opacity    = '0';
+      setTimeout(() => {
+        hm.className  = 'lyr';
+        hm.textContent = '♪';
+        hm.style.transition = 'opacity .35s ease';
+        hm.style.opacity    = '1';
+        startMusic();
+      }, 680);
+    }, 3000));
+ 
+  }, 440);
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   INICIAR MÚSICA E SINCRONIZAÇÃO
+══════════════════════════════════════════════════════════ */
+function startMusic() {
+  if (playing) return;
+  playing = true;
+ 
+  AM.currentTime = 0;
+  AM.play().catch(() => {});
+ 
+  EV.forEach((ev, i) => {
+    timers.push(setTimeout(() => {
+ 
+      /* atualizar legenda */
+      setHdr(ev.ly, 'lyr');
+ 
+      /* linha em branco (separador de estrofe) */
+      if (ev.bl) {
+        const gap = document.createElement('span');
+        gap.className = 'lb-gap';
+        lb.appendChild(gap);
+      }
+ 
+      /* digitar linha na carta */
+      if (ev.tx != null) {
+        /* calcular duração disponível até próxima linha */
+        let nextT = MEND;
+        for (let j = i + 1; j < EV.length; j++) {
+          if (EV[j].tx != null) { nextT = EV[j].t; break; }
+        }
+        const dur = Math.max(nextT - ev.t - 200, 700);
+        typeLine(ev.tx, dur);
+      }
+ 
+    }, ev.t));
+  });
+ 
+  /* guardar para fallback */
+  timers.push(setTimeout(() => { if (!finished) finishMusic(); }, MEND));
+  AM.addEventListener('ended', () => { if (!finished) finishMusic(); }, { once: true });
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   MÁQUINA DE ESCREVER
+══════════════════════════════════════════════════════════ */
+function typeLine(txt, avail) {
+  /* cancelar cursor anterior */
+  if (tyTimer)      clearTimeout(tyTimer);
+  if (activeCursor) { activeCursor.remove(); activeCursor = null; }
+ 
+  const line = document.createElement('span');
+  line.className = 'll';
+  lb.appendChild(line);
+ 
+  const cur = document.createElement('span');
+  cur.className = 'cur';
+  activeCursor  = cur;
+  line.appendChild(cur);
+ 
+  /* delay por caractere: máx 70ms, mín 28ms; sempre termina antes da próxima linha */
+  const delay = Math.max(Math.min(Math.floor(avail * 0.83 / txt.length), 70), 28);
+  let i = 0;
+ 
+  function step() {
+    if (i < txt.length) {
+      cur.insertAdjacentText('beforebegin', txt[i++]);
+      /* rolar para acompanhar a digitação */
+      line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      tyTimer = setTimeout(step, delay);
+    }
+  }
+  tyTimer = setTimeout(step, 0);
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   FIM DA MÚSICA
+══════════════════════════════════════════════════════════ */
+function finishMusic() {
+  if (finished) return;
+  finished = true;
+ 
+  /* remover cursor */
+  if (activeCursor) { activeCursor.remove(); activeCursor = null; }
+ 
+  /* mostrar assinatura */
+  sig.classList.add('on');
+ 
+  /* atualizar cabeçalho */
+  setHdr('Toque na assinatura para fechar ✉️');
+ 
+  /* iniciar loop instrumental */
+  AB.currentTime = 0;
+  AB.play().catch(() => {});
+}
+ 
+/* ══════════════════════════════════════════════════════════
+   FECHAR CARTA (toque na assinatura)
+══════════════════════════════════════════════════════════ */
+sig.addEventListener('click', closeLetter);
+ 
+function closeLetter() {
+  if (!isOpen) return;
+  isOpen = false;
+ 
+  /* parar timers e áudio */
+  timers.forEach(clearTimeout);
+  timers = [];
+  if (tyTimer) clearTimeout(tyTimer);
+  AM.pause(); AM.currentTime = 0;
+  AB.pause(); AB.currentTime = 0;
+  playing  = false;
+  finished = false;
+ 
+  /* animar carta aberta saindo */
+  ol.style.transition = 'opacity .4s ease, transform .4s ease';
+  ol.style.opacity    = '0';
+  ol.style.transform  = 'scale(.91) translateY(10px)';
+ 
+  setTimeout(() => {
+    ol.classList.remove('on');
+    ol.style.opacity = ol.style.transform = ol.style.transition = '';
+ 
+    /* mostrar carta fechada novamente */
+    cl.style.display    = '';
+    cl.style.opacity    = '0';
+    cl.style.transform  = 'scale(.9)';
+    cl.style.transition = 'opacity .52s ease, transform .52s ease';
+ 
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      cl.style.opacity   = '1';
+      cl.style.transform = 'none';
+    }));
+ 
+    setHdr('Toque no selo para abrir!');
+  }, 430);
+}
+</script>
+</body>
+</html>
