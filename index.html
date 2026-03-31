@@ -161,14 +161,14 @@ body::before {
 }
 #hm {
   font-family:'Dancing Script', cursive;
-  font-size:clamp(.95rem, 3.2vw, 1.38rem);
+  font-size:clamp(1.25rem, 4vw, 1.7rem);
   color:var(--br); text-align:center;
   transition:opacity .28s ease;
   line-height:1.3;
 }
 /* modo volume */
 #hm.vol {
-  font-size:clamp(1.1rem, 3.8vw, 1.65rem);
+  font-size:clamp(1.35rem, 4.5vw, 1.85rem);
   font-weight:700; color:var(--brD);
   animation:hpulse 1.1s ease-in-out infinite;
 }
@@ -177,7 +177,7 @@ body::before {
 #hm.lyr {
   font-family:'Playfair Display', serif;
   font-style:italic;
-  font-size:clamp(.82rem, 2.5vw, 1.05rem);
+  font-size:clamp(1.15rem, 3.6vw, 1.55rem);
   color:var(--brL);
 }
  
@@ -194,12 +194,15 @@ body::before {
 /* ───── CARTA FECHADA ───────────────────────────────────── */
 #cl {
   position:relative;
-  margin-top:clamp(2rem, 6vw, 4rem);
-  width:min(340px, 88vw);
+  margin-top:clamp(1rem, 3vw, 2rem);
+  width:min(720px, 95vw);
+  min-height:calc(100dvh - var(--HH) - 3.5rem);
   background:var(--paper);
   border-radius:3px;
-  padding:2.9rem 2.6rem 2.6rem;
+  padding:clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 4.5rem);
   text-align:center;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
   box-shadow:
     0 6px 30px rgba(93,64,55,.18),
     0 1px 6px rgba(93,64,55,.08),
@@ -214,8 +217,8 @@ body::before {
   background:linear-gradient(135deg, rgba(255,255,255,.38) 0%, transparent 55%);
   pointer-events:none; border-radius:3px;
 }
-.clt { font-size:clamp(1.55rem, 5vw, 2rem); font-weight:600; color:var(--brD); margin-bottom:.3rem; }
-.cls { font-size:.9rem; font-style:italic; color:var(--brL); margin-bottom:2.4rem; }
+.clt { font-size:clamp(2rem, 6vw, 3rem); font-weight:600; color:var(--brD); margin-bottom:.5rem; }
+.cls { font-size:clamp(1rem, 2.5vw, 1.3rem); font-style:italic; color:var(--brL); margin-bottom:3rem; }
  
 /* ── SELO DE CERA ── */
 #seal {
@@ -227,21 +230,15 @@ body::before {
 }
 #seal:hover { transform:scale(1.11) rotate(-5deg); filter:drop-shadow(0 8px 18px rgba(0,0,0,.3)); }
 #seal:active { transform:scale(.92) rotate(2deg); }
-.seal-hint {
-  display:block; margin-top:.55rem;
-  font-family:'Dancing Script', cursive;
-  font-size:.72rem; color:var(--brL);
-  opacity:.7;
-}
  
 .clfrom {
-  position:absolute; bottom:1.25rem; left:1.5rem;
-  text-align:left; line-height:1.7;
+  position:absolute; bottom:1.5rem; left:2rem;
+  text-align:left; line-height:1.8;
 }
 .clfrom span {
   display:block;
   font-family:'Dancing Script', cursive;
-  font-size:.76rem; color:var(--brL);
+  font-size:clamp(.9rem, 2vw, 1.1rem); color:var(--brL);
 }
  
 /* ───── CARTA ABERTA ────────────────────────────────────── */
@@ -302,19 +299,24 @@ body::before {
 #sig {
   margin-top:3rem; text-align:right;
   opacity:0; transition:opacity 1.3s ease;
-  cursor:pointer; user-select:none;
-  -webkit-tap-highlight-color:transparent;
+  pointer-events:none;
   position:relative; z-index:1;
 }
-#sig.on { opacity:1; }
+#sig.on {
+  opacity:1;
+  pointer-events:auto;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
 #sig:hover { opacity:.72; }
-#sig span {
+#sig .sn {
   display:block;
   font-family:'Dancing Script', cursive;
-  color:var(--br); line-height:1.8;
+  font-size:clamp(1.1rem, 3.2vw, 1.45rem);
+  font-weight:600; color:var(--br);
+  line-height:1.7;
 }
-.sn { font-size:clamp(1.05rem, 3vw, 1.35rem); font-weight:700; }
-.st { font-size:clamp(.78rem, 1.9vw, .92rem); font-style:italic; color:var(--brL); }
  
 /* ───── SCROLLBAR ───────────────────────────────────────── */
 ::-webkit-scrollbar { width:5px; }
@@ -402,8 +404,7 @@ body::before {
                 stroke="#fce4ec" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="seal-hint">✦ toque para abrir ✦</span>
-      </div>
+      </div><!-- #seal -->
  
       <!-- De / Para -->
       <div class="clfrom">
@@ -417,9 +418,7 @@ body::before {
       <div class="orn">✿ ♡ ✿</div>
       <div id="lb"></div>
       <div id="sig">
-        <span class="sn">Lucca A. Gomes</span>
-        <span class="st">para meu amor,</span>
-        <span class="st">M. Carolina Gama</span>
+        <span class="sn">Lucca A. Gomes — para meu amor, M. Carolina Gama</span>
       </div>
     </div><!-- #ol -->
  
@@ -520,51 +519,51 @@ function setHdr(txt, cls) {
 ══════════════════════════════════════════════════════════ */
 const EV = [
   /* ── Estrofe 1 ── */
-  { t:  6000, ly: 'If I could begin to be',                  tx: 'Se eu pudesse ser assim' },
-  { t: 10400, ly: 'Half of what you think of me',            tx: 'Só metade do que pensa de mim' },
-  { t: 13200, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 15600, ly: 'I could even learn how to love',          tx: 'Até aprender a amar' },
+  { t:  6000, ly: 'If I could begin to be',                   tx: 'Se eu pudesse ser assim' },
+  { t: 10400, ly: 'Half of what you think of me',             tx: 'Só metade do que pensa de mim' },
+  { t: 13200, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 15600, ly: 'I could even learn how to love',           tx: 'Até aprender a amar' },
   /* ── Refrão 1 ── */
-  { t: 19500, ly: 'When I see the way you act',              tx: 'Quando eu te vejo ir' },
-  { t: 22000, ly: "Wondering when I'm coming back",          tx: 'Pensando quando vou sair' },
-  { t: 24700, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 27300, ly: 'I could even learn how to love… like you',tx: 'Até aprender a amar como você' },
-  /* ── Instrumental 23s ── */
-  { t: 29600, ly: '♪',                                       tx: null, bl: true },
-  /* ── Estrofe 2 ── */
-  { t: 52000, ly: 'I always thought I might be bad',         tx: 'Sempre pensei que era ruim' },
-  { t: 55000, ly: "Now I'm sure that it's true",             tx: 'Agora tenho certeza' },
-  { t: 57000, ly: "'Cause I think you're so good",           tx: 'Pois você é perfeita' },
-  { t: 59500, ly: "And I'm nothing like you",                tx: 'Eu chego nem aos seus pés' },
-  { t: 62000, ly: 'Look at you go',                          tx: 'Veja você' },
-  { t: 64000, ly: 'I just adore you',                        tx: 'Como eu te adoro' },
-  { t: 66200, ly: 'I wish that I knew',                      tx: 'Só queria saber' },
-  { t: 68000, ly: 'What makes you think I\'m so special',    tx: 'Por que eu sou tão especial?' },
+  { t: 19500, ly: 'When I see the way you act',               tx: 'Quando eu te vejo ir' },
+  { t: 22000, ly: "Wondering when I'm coming back",           tx: 'Pensando quando vou sair' },
+  { t: 24700, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 27300, ly: 'I could even learn how to love… like you', tx: 'Até aprender a amar como você' },
+  /* ── Instrumental 26s ── */
+  { t: 29600, ly: '♪',                                        tx: null, bl: true },
+  /* ── Estrofe 2 ── (tudo +3000ms a partir daqui) */
+  { t: 55000, ly: 'I always thought I might be bad',          tx: 'Sempre pensei que era ruim' },
+  { t: 58000, ly: "Now I'm sure that it's true",              tx: 'Agora tenho certeza' },
+  { t: 60000, ly: "'Cause I think you're so good",            tx: 'Pois você é perfeita' },
+  { t: 62500, ly: "And I'm nothing like you",                 tx: 'Eu chego nem aos seus pés' },
+  { t: 65000, ly: 'Look at you go',                           tx: 'Veja você' },
+  { t: 67000, ly: 'I just adore you',                         tx: 'Como eu te adoro' },
+  { t: 69200, ly: 'I wish that I knew',                       tx: 'Só queria saber' },
+  { t: 71000, ly: "What makes you think I'm so special",      tx: 'Por que eu sou tão especial?' },
   /* ── Refrão 2 ── */
-  { t: 70500, ly: 'If I could begin to do',                  tx: 'Se eu pudesse só fazer' },
-  { t: 73000, ly: 'Something that does right by you',        tx: 'A coisa certa pra você' },
-  { t: 76000, ly: 'I would do about anything',               tx: 'Qualquer coisa eu iria fazer' },
-  { t: 79000, ly: 'I would even learn how to love',          tx: 'Até aprender a amar' },
+  { t: 73500, ly: 'If I could begin to do',                   tx: 'Se eu pudesse só fazer' },
+  { t: 76000, ly: 'Something that does right by you',         tx: 'A coisa certa pra você' },
+  { t: 79000, ly: 'I would do about anything',                tx: 'Qualquer coisa eu iria fazer' },
+  { t: 82000, ly: 'I would even learn how to love',           tx: 'Até aprender a amar' },
   /* ── Instrumental 5.5s ── */
-  { t: 82500, ly: '♪',                                       tx: null, bl: true },
+  { t: 85500, ly: '♪',                                        tx: null, bl: true },
   /* ── Refrão final ── */
-  { t: 87500, ly: 'When I see the way you look',             tx: 'Quando te vejo me olhar' },
-  { t: 90800, ly: 'Shaken by how long it took',              tx: 'Feliz por me ver voltar' },
-  { t: 93500, ly: 'I could do about anything',               tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 96000, ly: 'I could even learn how to love… like you',tx: 'Até aprender a amar como você' },
+  { t: 90500, ly: 'When I see the way you look',              tx: 'Quando te vejo me olhar' },
+  { t: 93800, ly: 'Shaken by how long it took',               tx: 'Feliz por me ver voltar' },
+  { t: 96500, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 99000, ly: 'I could even learn how to love… like you', tx: 'Até aprender a amar como você' },
   /* ── Instrumental 4s ── */
-  { t:100500, ly: '♪',                                       tx: null, bl: true },
+  { t:103500, ly: '♪',                                        tx: null, bl: true },
   /* ── Outro ── */
-  { t:104000, ly: 'Love like you',                           tx: 'Amar como você' },
+  { t:107000, ly: 'Love like you',                            tx: 'Amar como você' },
   /* ── Instrumental 4s ── */
-  { t:108500, ly: '♪',                                       tx: null, bl: true },
-  { t:112000, ly: 'Love me like you',                        tx: 'Amar a mim como você' },
-  /* ── Instrumental final 17s ── */
-  { t:129000, ly: '♪',                                       tx: null },
+  { t:111500, ly: '♪',                                        tx: null, bl: true },
+  { t:115000, ly: 'Love me like you',                         tx: 'Amar a mim como você' },
+  /* ── Instrumental final ── */
+  { t:132000, ly: '♪',                                        tx: null },
 ];
  
-/* Duração total estimada da música (fallback se 'ended' não disparar) */
-const MEND = 158000;
+/* Duração real do arquivo: 138.839s */
+const MEND = 138500;
  
 /* ══════════════════════════════════════════════════════════
    ABRIR CARTA
