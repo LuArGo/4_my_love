@@ -191,54 +191,83 @@ body::before {
   padding-bottom:3.5rem;
 }
  
-/* ───── CARTA FECHADA ───────────────────────────────────── */
+/* ───── CARTA FECHADA (ENVELOPE) ───────────────────────── */
 #cl {
   position:relative;
   margin-top:clamp(1rem, 3vw, 2rem);
-  width:min(720px, 95vw);
-  min-height:calc(100dvh - var(--HH) - 3.5rem);
-  background:var(--paper);
-  border-radius:3px;
-  padding:clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 4.5rem);
-  text-align:center;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  width:min(680px, 95vw);
+  height:clamp(300px, calc(100dvh - var(--HH) - 3.5rem), 435px);
+  background:#f7edd4;
+  border-radius:4px;
+  overflow:visible;
   box-shadow:
-    0 6px 30px rgba(93,64,55,.18),
-    0 1px 6px rgba(93,64,55,.08),
-    inset 0 0 0 1px rgba(93,64,55,.07);
-  background-image:
-    repeating-linear-gradient(
-      transparent, transparent 27px,
-      rgba(93,64,55,.05) 27px, rgba(93,64,55,.05) 28px);
+    0 8px 34px rgba(93,64,55,.22),
+    0 2px 8px rgba(93,64,55,.12),
+    inset 0 0 0 1px rgba(140,100,40,.18);
 }
+/* brilho de superfície */
 #cl::after {
   content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,.38) 0%, transparent 55%);
-  pointer-events:none; border-radius:3px;
+  background:linear-gradient(135deg, rgba(255,255,255,.2) 0%, transparent 55%);
+  pointer-events:none; border-radius:4px; z-index:2;
 }
-.clt { font-size:clamp(2rem, 6vw, 3rem); font-weight:600; color:var(--brD); margin-bottom:.5rem; }
-.cls { font-size:clamp(1rem, 2.5vw, 1.3rem); font-style:italic; color:var(--brL); margin-bottom:3rem; }
- 
+/* SVG com linhas de dobra e abas do envelope */
+.env-lines {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  border-radius:4px;
+  overflow:hidden;
+  z-index:1;
+}
+/* área de endereço (metade inferior) */
+.env-addr {
+  position:absolute;
+  bottom:22%; left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  width:65%;
+  z-index:3;
+  pointer-events:none;
+}
+.clt {
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(1.55rem, 4.5vw, 2.3rem);
+  font-weight:700; color:var(--brD);
+  margin-bottom:.3rem;
+}
+.cls {
+  font-family:'Playfair Display', serif;
+  font-size:clamp(.85rem, 2vw, 1.05rem);
+  font-style:italic; color:var(--brL);
+}
 /* ── SELO DE CERA ── */
 #seal {
-  display:inline-block; cursor:pointer;
-  filter:drop-shadow(0 5px 12px rgba(0,0,0,.22));
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%, -58%);
+  z-index:10;
+  cursor:pointer;
+  filter:drop-shadow(0 7px 16px rgba(0,0,0,.32));
   transition:transform .32s ease, filter .32s ease;
   user-select:none; -webkit-tap-highlight-color:transparent;
   will-change:transform;
 }
-#seal:hover { transform:scale(1.11) rotate(-5deg); filter:drop-shadow(0 8px 18px rgba(0,0,0,.3)); }
-#seal:active { transform:scale(.92) rotate(2deg); }
- 
+#seal:hover {
+  transform:translate(-50%, -58%) scale(1.11) rotate(-5deg);
+  filter:drop-shadow(0 11px 22px rgba(0,0,0,.38));
+}
+#seal:active {
+  transform:translate(-50%, -58%) scale(.92) rotate(2deg);
+}
 .clfrom {
-  position:absolute; bottom:1.5rem; left:2rem;
-  text-align:left; line-height:1.8;
+  position:absolute; bottom:1.4rem; left:1.8rem;
+  text-align:left; line-height:1.85; z-index:3;
 }
 .clfrom span {
   display:block;
   font-family:'Dancing Script', cursive;
-  font-size:clamp(.9rem, 2vw, 1.1rem); color:var(--brL);
+  font-size:clamp(.82rem, 1.7vw, .98rem); color:var(--brL);
 }
  
 /* ───── CARTA ABERTA ────────────────────────────────────── */
@@ -340,7 +369,7 @@ body::before {
       maxlength="8" placeholder="DDMMAAAA"
       autocomplete="off" inputmode="numeric"
     >
-    <button id="ubtn">Abrir ✉️</button>
+    <button id="ubtn">Abrir 🔐</button>
     <p class="emsg" id="em">Código incorreto, tente de novo 💔</p>
   </div>
 </div>
@@ -355,62 +384,137 @@ body::before {
  
   <main id="lm">
  
-    <!-- Carta fechada -->
+    <!-- Carta fechada (envelope) -->
     <div id="cl">
-      <div class="clt">Feliz Aniversário</div>
-      <div class="cls">amor da minha vida</div>
  
-      <!-- Selo de cera SVG -->
+      <!-- ── Linhas de dobra do envelope ── -->
+      <svg class="env-lines" viewBox="0 0 100 62" preserveAspectRatio="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <!-- aba esquerda -->
+        <polygon points="0,0 0,62 50,31"  fill="rgba(150,115,50,.09)"/>
+        <!-- aba direita -->
+        <polygon points="100,0 100,62 50,31" fill="rgba(150,115,50,.09)"/>
+        <!-- aba inferior -->
+        <polygon points="0,62 100,62 50,31" fill="rgba(150,115,50,.06)"/>
+        <!-- aba superior (selada) — ligeiramente mais escura -->
+        <polygon points="0,0 100,0 50,31"  fill="rgba(135,100,38,.15)"/>
+        <!-- linhas de dobra diagonais -->
+        <line x1="0"   y1="0"  x2="100" y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5"/>
+        <line x1="100" y1="0"  x2="0"   y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5"/>
+        <!-- borda externa -->
+        <rect x=".5" y=".5" width="99" height="61"
+              fill="none" stroke="rgba(130,95,35,.18)" stroke-width=".8" rx=".8"/>
+        <!-- sutil sombra interna no topo (profundidade da aba) -->
+        <line x1="0" y1="1" x2="100" y2="1" stroke="rgba(100,70,20,.12)" stroke-width="1.5"/>
+      </svg>
+ 
+      <!-- ── Texto central inferior ── -->
+      <div class="env-addr">
+        <div class="clt">Feliz Aniversário</div>
+        <div class="cls">amor da minha vida</div>
+      </div>
+ 
+      <!-- ── Selo de cera (centro geométrico do envelope) ── -->
       <div id="seal" role="button" tabindex="0" aria-label="Toque para abrir a carta">
-        <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg width="118" height="118" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="sg" cx="36%" cy="30%" r="70%">
-              <stop offset="0%"   stop-color="#cc2e2e"/>
-              <stop offset="55%"  stop-color="#8b1a1a"/>
-              <stop offset="100%" stop-color="#500000"/>
+            <!-- Distorção orgânica das bordas — simula cera derretida -->
+            <filter id="wf" x="-25%" y="-25%" width="150%" height="150%">
+              <feTurbulence type="turbulence" baseFrequency="0.042 0.068"
+                            numOctaves="5" seed="9" result="turb"/>
+              <feDisplacementMap in="SourceGraphic" in2="turb"
+                                 scale="6" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <!-- Blur para sombra -->
+            <filter id="wsh" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="4.5"/>
+            </filter>
+            <!-- Gradiente principal da cera: carmesim rico -->
+            <radialGradient id="wg1" cx="36%" cy="29%" r="72%">
+              <stop offset="0%"   stop-color="#df4545"/>
+              <stop offset="28%"  stop-color="#a81818"/>
+              <stop offset="65%"  stop-color="#780808"/>
+              <stop offset="100%" stop-color="#3a0000"/>
             </radialGradient>
-            <radialGradient id="gls" cx="35%" cy="28%" r="45%">
-              <stop offset="0%"   stop-color="rgba(255,255,255,.22)"/>
-              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            <!-- Reflexo de luz (vela) -->
+            <radialGradient id="wg2" cx="32%" cy="24%" r="50%">
+              <stop offset="0%"   stop-color="rgba(255,175,155,.48)"/>
+              <stop offset="55%"  stop-color="rgba(255,100,80,.07)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <!-- Vinheta nas bordas (profundidade) -->
+            <radialGradient id="wg3" cx="50%" cy="50%" r="50%">
+              <stop offset="52%" stop-color="rgba(0,0,0,0)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,.42)"/>
             </radialGradient>
           </defs>
-          <!-- sombra -->
-          <ellipse cx="50" cy="56" rx="36" ry="8" fill="rgba(0,0,0,.14)"/>
-          <!-- corpo principal -->
-          <circle cx="50" cy="49" r="38" fill="#7b1515"/>
-          <circle cx="50" cy="49" r="38" fill="url(#sg)"/>
-          <!-- anel interno pontilhado -->
-          <circle cx="50" cy="49" r="33" fill="none"
-                  stroke="#d44444" stroke-width="1.2"
-                  stroke-dasharray="3.2 2.4" opacity=".55"/>
-          <!-- brilho de cera -->
-          <circle cx="50" cy="49" r="38" fill="url(#gls)"/>
-          <!-- coração -->
-          <path d="M50 68
-                   C50 68 26 53 26 38
-                   C26 30 33 26 40 30
-                   C43 32 46 35 50 39
-                   C54 35 57 32 60 30
-                   C67 26 74 30 74 38
-                   C74 53 50 68 50 68Z"
-                fill="#fce4ec" opacity=".93"/>
-          <!-- flecha — haste -->
-          <line x1="22" y1="58" x2="72" y2="34"
-                stroke="#fce4ec" stroke-width="2.6" stroke-linecap="round"/>
-          <!-- ponta (direita) -->
-          <polygon points="72,34 64,31 67,40" fill="#fce4ec"/>
-          <!-- rabo (esquerda) -->
-          <path d="M22,58 L16,52 M22,58 L16,64"
-                stroke="#fce4ec" stroke-width="2.2"
+ 
+          <!-- Sombra projetada -->
+          <ellipse cx="51" cy="59" rx="33" ry="8"
+                   fill="rgba(0,0,0,.32)" filter="url(#wsh)"/>
+ 
+          <!-- Corpo da cera (círculo distorcido — borda orgânica) -->
+          <circle cx="50" cy="48" r="37" fill="url(#wg1)" filter="url(#wf)"/>
+          <!-- Reflexo de luz sobre a cera -->
+          <circle cx="50" cy="48" r="37" fill="url(#wg2)" filter="url(#wf)"/>
+          <!-- Escurecimento nas bordas -->
+          <circle cx="50" cy="48" r="37" fill="url(#wg3)" filter="url(#wf)"/>
+ 
+          <!-- Anel interno do carimbo (duplo, estilo brasão) -->
+          <circle cx="50" cy="48" r="27.5" fill="none"
+                  stroke="rgba(255,200,190,.3)" stroke-width="1.8"
+                  stroke-dasharray="4.5 3"/>
+          <circle cx="50" cy="48" r="25.5" fill="none"
+                  stroke="rgba(15,0,0,.4)" stroke-width=".9"/>
+ 
+          <!-- Coração esculpido (relevo baixo) -->
+          <path d="M50 64
+                   C50 64 30 51 30 39
+                   C30 31 37 27 43 31
+                   C46 33 49 37 50 40
+                   C51 37 54 33 57 31
+                   C63 27 70 31 70 39
+                   C70 51 50 64 50 64Z"
+                fill="rgba(255,210,205,.75)"
+                stroke="rgba(50,0,0,.38)" stroke-width="1.3"/>
+ 
+          <!-- Flecha — haste -->
+          <line x1="26" y1="57" x2="71" y2="33"
+                stroke="rgba(255,218,210,.85)" stroke-width="2.4"
+                stroke-linecap="round"/>
+          <!-- Ponta da flecha -->
+          <path d="M71,33 L63,30 L66,39 Z"
+                fill="rgba(255,218,210,.85)"/>
+          <!-- Rabo da flecha (duas penas) -->
+          <path d="M26,57 L19,51 M26,57 L19,63"
+                stroke="rgba(255,218,210,.85)" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round"/>
+ 
+          <!-- Imperfeições da cera (micro-fissuras) -->
+          <path d="M39,30 Q41,34 39,38"
+                stroke="rgba(50,0,0,.2)" stroke-width=".85"
+                fill="none" stroke-linecap="round"/>
+          <path d="M62,32 Q63,36 61,40"
+                stroke="rgba(50,0,0,.17)" stroke-width=".75"
+                fill="none" stroke-linecap="round"/>
+          <path d="M29,53 Q27,57 30,60"
+                stroke="rgba(50,0,0,.16)" stroke-width=".7"
+                fill="none" stroke-linecap="round"/>
+ 
+          <!-- Reflexo especular (brilho de vela no topo-esquerdo) -->
+          <ellipse cx="37" cy="33" rx="6.5" ry="3.5"
+                   fill="rgba(255,195,175,.28)" transform="rotate(-30,37,33)"/>
+          <ellipse cx="39" cy="30" rx="2.8" ry="1.5"
+                   fill="rgba(255,225,210,.42)" transform="rotate(-25,39,30)"/>
         </svg>
       </div><!-- #seal -->
  
-      <!-- De / Para -->
+      <!-- De / Para (canto inferior esquerdo) -->
       <div class="clfrom">
         <span>De: Lucca</span>
         <span>Para: meu amor</span>
       </div>
+ 
     </div><!-- #cl -->
  
     <!-- Carta aberta -->
@@ -519,47 +623,48 @@ function setHdr(txt, cls) {
 ══════════════════════════════════════════════════════════ */
 const EV = [
   /* ── Estrofe 1 ── */
-  { t:  6000, ly: 'If I could begin to be',                   tx: 'Se eu pudesse ser assim' },
-  { t: 10400, ly: 'Half of what you think of me',             tx: 'Só metade do que pensa de mim' },
-  { t: 13200, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 15600, ly: 'I could even learn how to love',           tx: 'Até aprender a amar' },
+  { t:  6900, ly: 'If I could begin to be',                      tx: 'Se eu pudesse ser assim' },
+  { t:  9900, ly: 'Half of what you think of me',                tx: 'Só metade do que pensa de mim' },
+  { t: 12700, ly: 'I could do about anything',                   tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 15100, ly: 'I could even learn how to love',              tx: 'Até aprender a amar' },
   /* ── Refrão 1 ── */
-  { t: 19500, ly: 'When I see the way you act',               tx: 'Quando eu te vejo ir' },
-  { t: 22000, ly: "Wondering when I'm coming back",           tx: 'Pensando quando vou sair' },
-  { t: 24700, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 27300, ly: 'I could even learn how to love… like you', tx: 'Até aprender a amar como você' },
-  /* ── Instrumental 26s ── */
-  { t: 29600, ly: '♪',                                        tx: null, bl: true },
-  /* ── Estrofe 2 ── (tudo +3000ms a partir daqui) */
-  { t: 55000, ly: 'I always thought I might be bad',          tx: 'Sempre pensei que era ruim' },
-  { t: 58000, ly: "Now I'm sure that it's true",              tx: 'Agora tenho certeza' },
-  { t: 60000, ly: "'Cause I think you're so good",            tx: 'Pois você é perfeita' },
-  { t: 62500, ly: "And I'm nothing like you",                 tx: 'Eu chego nem aos seus pés' },
-  { t: 65000, ly: 'Look at you go',                           tx: 'Veja você' },
-  { t: 67000, ly: 'I just adore you',                         tx: 'Como eu te adoro' },
-  { t: 69200, ly: 'I wish that I knew',                       tx: 'Só queria saber' },
-  { t: 71000, ly: "What makes you think I'm so special",      tx: 'Por que eu sou tão especial?' },
+  {tx: null, bl: true },
+  { t: 19200, ly: 'When I see the way you act',                  tx: 'Quando eu te vejo agir' },
+  { t: 22000, ly: "Wondering when I'm coming back",              tx: 'Imaginando quando vou chegar' },
+  { t: 24700, ly: 'I could do about anything',                   tx: 'Qualquer coisa eu poderia fazer' },
+  { t: 27100, ly: 'I could even learn how to love... like you',  tx: 'Até aprender a amar... como você' },
+  /* ── Instrumental ── */
+  { t: 31945, ly: '♪',                                           tx: null, bl: true },
+  /* ── Estrofe 2 ── */
+  { t: 54360, ly: 'I always thought I might be bad',             tx: 'Sempre pensei que era ruim' },
+  { t: 57500, ly: "Now I'm sure that it's true",                 tx: 'Tenho agora certeza' },
+  { t: 60600, ly: "'Cause I think you're so good",               tx: 'Pois você me faz bem' },
+  { t: 63660, ly: "And I'm nothing like you",                    tx: 'Eu sou só um ninguém' },
+  {tx: null, bl: true },
+  { t: 66600, ly: 'Look at you go',                              tx: 'Veja você' },
+  { t: 67800, ly: 'I just adore you',                            tx: 'Como eu te adoro' },
+  { t: 70000, ly: 'I wish that I knew',                          tx: 'Só queria saber' },
+  { t: 73000, ly: "What makes you think I'm so special?",        tx: 'Por que eu sou tão especial?' },
   /* ── Refrão 2 ── */
-  { t: 73500, ly: 'If I could begin to do',                   tx: 'Se eu pudesse só fazer' },
-  { t: 76000, ly: 'Something that does right by you',         tx: 'A coisa certa pra você' },
-  { t: 79000, ly: 'I would do about anything',                tx: 'Qualquer coisa eu iria fazer' },
-  { t: 82000, ly: 'I would even learn how to love',           tx: 'Até aprender a amar' },
-  /* ── Instrumental 5.5s ── */
-  { t: 85500, ly: '♪',                                        tx: null, bl: true },
+  {tx: null, bl: true },
+  { t: 79550, ly: 'If I could begin to do',                      tx: 'Se eu pudesse só fazer' },
+  { t: 82800, ly: 'Something that does right by you',            tx: 'A coisa certa pra você' },
+  { t: 87000, ly: 'I would do about anything',                   tx: 'Qualquer coisa eu iria fazer' },
+  { t: 89600, ly: 'I would even learn how to love',              tx: 'Até aprender a amar' },
+  /* ── Instrumental ── */
+  { t: 93000, ly: '♪',                                           tx: null, bl: true },
   /* ── Refrão final ── */
-  { t: 90500, ly: 'When I see the way you look',              tx: 'Quando te vejo me olhar' },
-  { t: 93800, ly: 'Shaken by how long it took',               tx: 'Feliz por me ver voltar' },
-  { t: 96500, ly: 'I could do about anything',                tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 99000, ly: 'I could even learn how to love… like you', tx: 'Até aprender a amar como você' },
-  /* ── Instrumental 4s ── */
-  { t:103500, ly: '♪',                                        tx: null, bl: true },
-  /* ── Outro ── */
-  { t:107000, ly: 'Love like you',                            tx: 'Amar como você' },
-  /* ── Instrumental 4s ── */
-  { t:111500, ly: '♪',                                        tx: null, bl: true },
-  { t:115000, ly: 'Love me like you',                         tx: 'Amar a mim como você' },
-  /* ── Instrumental final ── */
-  { t:132000, ly: '♪',                                        tx: null },
+  { t: 98400, ly: 'When I see the way you look',                 tx: 'Quando te vejo me olhar' },
+  { t:101100, ly: 'Shaken by how long it took',                  tx: 'Feliz por me ver voltar' },
+  { t:103700, ly: 'I could do about anything',                   tx: 'Qualquer coisa eu poderia fazer' },
+  { t:105900, ly: 'I could even learn how to love like you',     tx: 'Até aprender a amar como você' },
+  /* ── Instrumental ── */
+  { t:111000, ly: '♪',                                           tx: null, bl: true },
+  { t:114800, ly: 'Love like you',                               tx: 'Amar como você' },
+  { t:117000, ly: '♪',                                           tx: null, bl: true },
+  { t:121000, ly: 'Love me like you',                            tx: 'Amar a mim como você' },
+  /* ── Instrumental ── */
+  { t:123456, ly: '♪',                                           tx: null },
 ];
  
 /* Duração real do arquivo: 138.839s */
@@ -769,7 +874,7 @@ function finishMusic() {
   sig.classList.add('on');
  
   /* atualizar cabeçalho */
-  setHdr('Toque na assinatura para fechar ✉️');
+  setHdr('Toque na assinatura para fechar!');
  
   /* iniciar loop instrumental */
   AB.currentTime = 0;
