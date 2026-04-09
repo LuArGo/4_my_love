@@ -1,1014 +1,1543 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Carol</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>💌</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap" rel="stylesheet">
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Carol</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>💌</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ───── VARIÁVEIS ───────────────────────────────────────── */
+    :root {
+      --bg: #fce4ec;
+      --bg2: #f8bbd0;
+      --br: #5d4037;
+      --brL: #8d6e63;
+      --brD: #3e2723;
+      --cream: #fffdf7;
+      --paper: #fefaf3;
+      --HH: 60px;
+    }
 
-:root {
-  --bg:      #fce4ec;
-  --bg2:     #f8bbd0;
-  --br:      #5d4037;
-  --brL:     #8d6e63;
-  --brD:     #3e2723;
-  --cream:   #fffdf7;
-  --paper:   #fefaf3;
-  --HH:      60px;
-}
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--br);
-  font-family:'Playfair Display', serif;
-  overflow-x:hidden;
-}
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body::before {
-  content:'';
-  position:fixed; inset:0; z-index:0;
-  background:
-    radial-gradient(ellipse at 8% 92%,  rgba(248,187,208,.6) 0%, transparent 44%),
-    radial-gradient(ellipse at 92% 6%,  rgba(252,228,236,.8) 0%, transparent 44%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,240,245,.3) 0%, transparent 70%);
-  pointer-events:none;
-}
- 
-#fh { position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
-.fh {
-  position:absolute; bottom:-60px;
-  color:var(--brL); opacity:.09;
-  animation:fhUp linear infinite;
-  will-change:transform;
-}
-@keyframes fhUp {
-  0%   { transform:translateY(0) rotate(0deg); opacity:0; }
-  6%   { opacity:.09; }
-  94%  { opacity:.06; }
-  100% { transform:translateY(-115vh) rotate(30deg); opacity:0; }
-}
- 
-#lock {
-  position:relative; z-index:10;
-  min-height:100vh;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:2rem; gap:0;
-  animation:fadeInPage .8s ease both;
-}
-@keyframes fadeInPage {
-  from { opacity:0; transform:translateY(16px); }
-  to   { opacity:1; transform:none; }
-}
-.ldeco {
-  font-size:1.9rem; letter-spacing:.9rem;
-  margin-bottom:1.8rem; opacity:.45;
-  animation:fadeInPage .8s .2s ease both;
-}
-.ltitle {
-  font-family:'Dancing Script', cursive;
-  font-size:clamp(1.45rem, 5vw, 2.3rem);
-  color:var(--brD);
-  text-align:center; line-height:1.5;
-  margin-bottom:.55rem;
-  animation:fadeInPage .8s .3s ease both;
-}
-.lhint {
-  font-size:clamp(.75rem, 2vw, .95rem);
-  color:var(--brL); font-style:italic;
-  text-align:center; margin-bottom:2.6rem;
-  animation:fadeInPage .8s .4s ease both;
-}
-.lform {
-  display:flex; flex-direction:column;
-  align-items:center; gap:.9rem;
-  width:100%; max-width:290px;
-  animation:fadeInPage .8s .5s ease both;
-}
-#ci {
-  width:100%;
-  padding:.88rem 1.5rem;
-  border:2px solid rgba(93,64,55,.38);
-  border-radius:50px;
-  background:rgba(255,255,255,.62);
-  font-family:'Courier Prime', monospace;
-  font-size:1.3rem; letter-spacing:.36rem;
-  text-align:center; color:var(--brD);
-  outline:none;
-  transition:border-color .3s, box-shadow .3s;
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-}
-#ci:focus {
-  border-color:var(--br);
-  box-shadow:0 0 0 4px rgba(93,64,55,.11);
-}
-#ci.shake {
-  animation:shake .42s ease;
-  border-color:#c62828;
-}
-@keyframes shake {
-  0%,100%{ transform:translateX(0); }
-  18%{ transform:translateX(-9px); }
-  36%{ transform:translateX(9px); }
-  54%{ transform:translateX(-6px); }
-  72%{ transform:translateX(5px); }
-}
-#ubtn {
-  padding:.72rem 2.6rem;
-  background:var(--br); color:#fff8f4;
-  border:none; border-radius:50px;
-  font-family:'Dancing Script', cursive;
-  font-size:1.4rem; cursor:pointer;
-  box-shadow:0 4px 14px rgba(62,39,35,.26);
-  transition:background .22s, transform .15s, box-shadow .22s;
-}
-#ubtn:hover {
-  background:var(--brD); transform:scale(1.05);
-  box-shadow:0 6px 18px rgba(62,39,35,.3);
-}
-#ubtn:active { transform:scale(.96); }
-.emsg {
-  font-size:.83rem; color:#c62828; font-style:italic;
-  text-align:center; min-height:1.2em;
-  opacity:0; transition:opacity .3s;
-}
-.emsg.on { opacity:1; }
- 
-#ls { display:none; flex-direction:column; min-height:100vh; position:relative; z-index:10; }
-#ls.on { display:flex; }
- 
-#ls.vhs-rew::after,
-#ls.vhs-fwd::after {
-  content:'';
-  position:fixed; inset:0; z-index:999;
-  pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,
-    rgba(0,0,0,.055) 0px, rgba(0,0,0,.055) 1px,
-    transparent 1px, transparent 4px
-  );
-}
- 
-#ls.vhs-rew {
-  filter:hue-rotate(-22deg) saturate(1.7) contrast(1.1);
-  animation:vhsShake .07s steps(1) infinite;
-}
-@keyframes vhsShake {
-  0%  { transform:translateX(0)    skewX(0deg); }
-  20% { transform:translateX(-4px) skewX(-.4deg); }
-  50% { transform:translateX(3px)  skewX(.3deg); }
-  80% { transform:translateX(-2px) skewX(-.2deg); }
-  100%{ transform:translateX(0)    skewX(0deg); }
-}
- 
-#ls.vhs-rew #lm {
-  animation:vhsGlitch 1.1s steps(1) infinite;
-}
-@keyframes vhsGlitch {
-  0%,89%,100% { clip-path:none; transform:none; }
-  90% { clip-path:inset(30% 0 60% 0); transform:translateX(6px); }
-  93% { clip-path:inset(60% 0 20% 0); transform:translateX(-5px); }
-  96% { clip-path:none; transform:none; }
-}
- 
-#ls.vhs-fwd {
-  filter:hue-rotate(14deg) saturate(1.45) brightness(1.09);
-}
- 
-#hm.k7 {
-  font-family:'Courier Prime', monospace;
-  font-size:clamp(1.1rem, 3.6vw, 1.5rem);
-  letter-spacing:.06em;
-  color:var(--brD);
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-.tape-zone {
-  position:fixed;
-  top:var(--HH); bottom:0;
-  width:clamp(50px, 16vw, 86px);
-  z-index:400;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:.5rem;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.tape-zone.playable { display:flex; }
- 
-.tape-rew {
-  left:0;
-  background:linear-gradient(to right,
-    rgba(93,64,55,.07) 0%, transparent 100%);
-}
-.tape-fwd {
-  right:0;
-  background:linear-gradient(to left,
-    rgba(93,64,55,.07) 0%, transparent 100%);
-}
- 
-.tz-icon {
-  font-size:1.45rem;
-  color:var(--brL);
-  opacity:0;
-  transition:opacity .18s, transform .18s;
-  transform:scale(.82);
-  line-height:1;
-}
-.tz-label {
-  font-family:'Courier Prime', monospace;
-  font-size:.58rem;
-  letter-spacing:.14em;
-  color:var(--brL);
-  opacity:0;
-  transition:opacity .18s;
-  text-transform:uppercase;
-}
-.tape-zone:hover .tz-icon,
-.tape-zone.pressing .tz-icon {
-  opacity:.75;
-  transform:scale(1);
-}
-.tape-zone:hover .tz-label,
-.tape-zone.pressing .tz-label { opacity:.55; }
-.tape-zone.pressing .tz-icon  { opacity:1; }
- 
-#hdr {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  height:var(--HH);
-  background:rgba(252,228,236,.94);
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(93,64,55,.13);
-  display:flex; align-items:center; justify-content:center;
-  padding:0 1.2rem;
-}
-#hm {
-  font-family:'Dancing Script', cursive;
-  font-size:clamp(1.25rem, 4vw, 1.7rem);
-  color:var(--br); text-align:center;
-  transition:opacity .28s ease;
-  line-height:1.3;
-}
-#hm.vol {
-  font-size:clamp(1.35rem, 4.5vw, 1.85rem);
-  font-weight:700; color:var(--brD);
-  animation:hpulse 1.1s ease-in-out infinite;
-}
-@keyframes hpulse { 0%,100%{ opacity:1; } 50%{ opacity:.62; } }
-#hm.lyr {
-  font-family:'Playfair Display', serif;
-  font-style:italic;
-  font-size:clamp(1.15rem, 3.6vw, 1.55rem);
-  color:var(--brL);
-}
- 
-#lm {
-  flex:1;
-  padding-top:var(--HH);
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding-bottom:3.5rem;
-}
- 
-#cl {
-  position:relative;
-  margin-top:clamp(1rem, 3vw, 2rem);
-  width:min(680px, 95vw);
-  height:clamp(300px, calc(100dvh - var(--HH) - 3.5rem), 435px);
-  background:#f7edd4;
-  border-radius:4px;
-  overflow:visible;
-  box-shadow:
-    0 8px 34px rgba(93,64,55,.22),
-    0 2px 8px rgba(93,64,55,.12),
-    inset 0 0 0 1px rgba(140,100,40,.18);
-}
-#cl::after {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,.2) 0%, transparent 55%);
-  pointer-events:none; border-radius:4px; z-index:2;
-}
-.env-lines {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  pointer-events:none;
-  border-radius:4px;
-  overflow:hidden;
-  z-index:1;
-}
-.env-addr {
-  position:absolute;
-  bottom:22%; left:50%;
-  transform:translateX(-50%);
-  text-align:center;
-  width:65%;
-  z-index:3;
-  pointer-events:none;
-}
-.clt {
-  font-family:'Dancing Script', cursive;
-  font-size:clamp(1.55rem, 4.5vw, 2.3rem);
-  font-weight:700; color:var(--brD);
-  margin-bottom:.3rem;
-}
-.cls {
-  font-family:'Playfair Display', serif;
-  font-size:clamp(.85rem, 2vw, 1.05rem);
-  font-style:italic; color:var(--brL);
-}
-#seal {
-  position:absolute;
-  top:50%; left:50%;
-  transform:translate(-50%, -58%);
-  z-index:10;
-  cursor:pointer;
-  filter:drop-shadow(0 7px 16px rgba(0,0,0,.32));
-  transition:transform .32s ease, filter .32s ease;
-  user-select:none; -webkit-tap-highlight-color:transparent;
-  will-change:transform;
-}
-#seal:hover {
-  transform:translate(-50%, -58%) scale(1.11) rotate(-5deg);
-  filter:drop-shadow(0 11px 22px rgba(0,0,0,.38));
-}
-#seal:active {
-  transform:translate(-50%, -58%) scale(.92) rotate(2deg);
-}
-.clfrom {
-  position:absolute; bottom:1.4rem; left:1.8rem;
-  text-align:left; line-height:1.85; z-index:3;
-}
-.clfrom span {
-  display:block;
-  font-family:'Dancing Script', cursive;
-  font-size:clamp(.82rem, 1.7vw, .98rem); color:var(--brL);
-}
- 
-#ol {
-  display:none;
-  margin-top:clamp(.8rem, 2vw, 1.8rem);
-  width:min(860px, 97vw);
-  min-height:calc(100dvh - var(--HH) - 3rem);
-  background:var(--paper); border-radius:3px;
-  padding:clamp(1.8rem, 4.5vw, 3.5rem) clamp(1.2rem, 4vw, 3.2rem);
-  box-shadow:
-    0 10px 48px rgba(93,64,55,.18),
-    0 2px 8px rgba(93,64,55,.1),
-    inset 0 0 0 1px rgba(93,64,55,.07);
-  background-image:
-    repeating-linear-gradient(
-      transparent, transparent 32px,
-      rgba(93,64,55,.042) 32px, rgba(93,64,55,.042) 33px);
-  position:relative;
-}
-#ol::after {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,.28) 0%, transparent 50%);
-  pointer-events:none; border-radius:3px;
-}
-#ol.on { display:block; }
-.orn {
-  text-align:center; font-size:1.25rem;
-  margin-bottom:2rem; opacity:.4;
-  letter-spacing:.5rem;
-}
-#lb {
-  font-family:'Courier Prime', monospace;
-  font-size:clamp(.95rem, 2.6vw, 1.08rem);
-  line-height:2.1;
-  color:var(--brD);
-  min-height:160px;
-  position:relative; z-index:1;
-}
-.ll      { display:block; min-height:1.9em; }
-.lb-gap  { display:block; height:1.5em; }
-.cur {
-  display:inline-block;
-  width:2px; height:.85em;
-  background:var(--br);
-  margin-left:1px;
-  vertical-align:middle;
-  animation:blink .85s step-end infinite;
-}
-@keyframes blink { 50%{ opacity:0; } }
- 
-#sig {
-  margin-top:3rem; text-align:right;
-  opacity:0; transition:opacity 1.3s ease;
-  pointer-events:none;
-  position:relative; z-index:1;
-}
-#sig.on {
-  opacity:1;
-  pointer-events:auto;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-#sig:hover { opacity:.72; }
-#sig .sn {
-  display:block;
-  font-family:'Dancing Script', cursive;
-  font-size:clamp(1.1rem, 3.2vw, 1.45rem);
-  font-weight:600; color:var(--br);
-  line-height:1.7;
-}
- 
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-track { background:var(--bg); }
-::-webkit-scrollbar-thumb { background:var(--brL); border-radius:3px; }
-</style>
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--br);
+      font-family: 'Playfair Display', serif;
+      overflow-x: hidden;
+    }
+
+    /* gradiente suave de fundo */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 8% 92%, rgba(248, 187, 208, .6) 0%, transparent 44%),
+        radial-gradient(ellipse at 92% 6%, rgba(252, 228, 236, .8) 0%, transparent 44%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 240, 245, .3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ───── CORAÇÕES FLUTUANTES ─────────────────────────────── */
+    #fh {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .fh {
+      position: absolute;
+      bottom: -60px;
+      color: var(--brL);
+      opacity: .09;
+      animation: fhUp linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes fhUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      6% {
+        opacity: .09;
+      }
+
+      94% {
+        opacity: .06;
+      }
+
+      100% {
+        transform: translateY(-115vh) rotate(30deg);
+        opacity: 0;
+      }
+    }
+
+    /* ───── TELA DE BLOQUEIO ────────────────────────────────── */
+    #lock {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      gap: 0;
+      animation: fadeInPage .8s ease both;
+    }
+
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .ldeco {
+      font-size: 1.9rem;
+      letter-spacing: .9rem;
+      margin-bottom: 1.8rem;
+      opacity: .45;
+      animation: fadeInPage .8s .2s ease both;
+    }
+
+    .ltitle {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.45rem, 5vw, 2.3rem);
+      color: var(--brD);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: .55rem;
+      animation: fadeInPage .8s .3s ease both;
+    }
+
+    .lhint {
+      font-size: clamp(.75rem, 2vw, .95rem);
+      color: var(--brL);
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 2.6rem;
+      animation: fadeInPage .8s .4s ease both;
+    }
+
+    .lform {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .9rem;
+      width: 100%;
+      max-width: 290px;
+      animation: fadeInPage .8s .5s ease both;
+    }
+
+    #ci {
+      width: 100%;
+      padding: .88rem 1.5rem;
+      border: 2px solid rgba(93, 64, 55, .38);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, .62);
+      font-family: 'Courier Prime', monospace;
+      font-size: 1.3rem;
+      letter-spacing: .36rem;
+      text-align: center;
+      color: var(--brD);
+      outline: none;
+      transition: border-color .3s, box-shadow .3s;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    #ci:focus {
+      border-color: var(--br);
+      box-shadow: 0 0 0 4px rgba(93, 64, 55, .11);
+    }
+
+    #ci.shake {
+      animation: shake .42s ease;
+      border-color: #c62828;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      18% {
+        transform: translateX(-9px);
+      }
+
+      36% {
+        transform: translateX(9px);
+      }
+
+      54% {
+        transform: translateX(-6px);
+      }
+
+      72% {
+        transform: translateX(5px);
+      }
+    }
+
+    #ubtn {
+      padding: .72rem 2.6rem;
+      background: var(--br);
+      color: #fff8f4;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(62, 39, 35, .26);
+      transition: background .22s, transform .15s, box-shadow .22s;
+    }
+
+    #ubtn:hover {
+      background: var(--brD);
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(62, 39, 35, .3);
+    }
+
+    #ubtn:active {
+      transform: scale(.96);
+    }
+
+    .emsg {
+      font-size: .83rem;
+      color: #c62828;
+      font-style: italic;
+      text-align: center;
+      min-height: 1.2em;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .emsg.on {
+      opacity: 1;
+    }
+
+    /* ───── TELA DA CARTA ───────────────────────────────────── */
+    #ls {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    #ls.on {
+      display: flex;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+   VHS / K7 — EFEITOS VISUAIS
+══════════════════════════════════════════════════════════ */
+    /* scanlines durante modo K7 */
+    #ls.vhs-rew::after,
+    #ls.vhs-fwd::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, .055) 0px, rgba(0, 0, 0, .055) 1px,
+          transparent 1px, transparent 4px);
+    }
+
+    /* REWIND — tom frio + tremor */
+    #ls.vhs-rew {
+      filter: hue-rotate(-22deg) saturate(1.7) contrast(1.1);
+      animation: vhsShake .07s steps(1) infinite;
+    }
+
+    @keyframes vhsShake {
+      0% {
+        transform: translateX(0) skewX(0deg);
+      }
+
+      20% {
+        transform: translateX(-4px) skewX(-.4deg);
+      }
+
+      50% {
+        transform: translateX(3px) skewX(.3deg);
+      }
+
+      80% {
+        transform: translateX(-2px) skewX(-.2deg);
+      }
+
+      100% {
+        transform: translateX(0) skewX(0deg);
+      }
+    }
+
+    #ls.vhs-rew #lm {
+      animation: vhsGlitch 1.1s steps(1) infinite;
+    }
+
+    @keyframes vhsGlitch {
+
+      0%,
+      89%,
+      100% {
+        clip-path: none;
+        transform: none;
+      }
+
+      90% {
+        clip-path: inset(30% 0 60% 0);
+        transform: translateX(6px);
+      }
+
+      93% {
+        clip-path: inset(60% 0 20% 0);
+        transform: translateX(-5px);
+      }
+
+      96% {
+        clip-path: none;
+        transform: none;
+      }
+    }
+
+    /* FAST-FORWARD — tom quente */
+    #ls.vhs-fwd {
+      filter: hue-rotate(14deg) saturate(1.45) brightness(1.09);
+    }
+
+    /* PAUSADO */
+    #ls.vhs-pause {
+      filter: saturate(.55) brightness(.92);
+    }
+
+    /* cabeçalho em modo K7 */
+    #hm.k7 {
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(1.1rem, 3.6vw, 1.5rem);
+      letter-spacing: .06em;
+      color: var(--brD);
+    }
+
+    /* ── ZONAS DE TOQUE K7 — 3 colunas ── */
+    .tape-zone {
+      position: fixed;
+      top: var(--HH);
+      bottom: 0;
+      z-index: 400;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .tape-zone.playable {
+      display: flex;
+      pointer-events: auto;
+    }
+
+    #tz-l {
+      left: 0;
+      width: 33.33vw;
+      background: linear-gradient(to right, rgba(93, 64, 55, .07) 0%, transparent 100%);
+    }
+
+    #tz-c {
+      left: 33.33vw;
+      width: 33.34vw;
+    }
+
+    #tz-r {
+      right: 0;
+      width: 33.33vw;
+      background: linear-gradient(to left, rgba(93, 64, 55, .07) 0%, transparent 100%);
+    }
+
+    .tz-icon {
+      font-size: 1.45rem;
+      color: var(--brL);
+      opacity: 0;
+      transition: opacity .18s, transform .18s;
+      transform: scale(.82);
+      line-height: 1;
+    }
+
+    .tz-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: .58rem;
+      letter-spacing: .14em;
+      color: var(--brL);
+      opacity: 0;
+      transition: opacity .18s;
+      text-transform: uppercase;
+    }
+
+    .tape-zone:hover .tz-icon,
+    .tape-zone.active .tz-icon {
+      opacity: .75;
+      transform: scale(1);
+    }
+
+    .tape-zone:hover .tz-label,
+    .tape-zone.active .tz-label {
+      opacity: .55;
+    }
+
+    .tape-zone.active .tz-icon {
+      opacity: 1;
+    }
+
+    /* cabeçalho fixo */
+    #hdr {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: var(--HH);
+      background: rgba(252, 228, 236, .94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(93, 64, 55, .13);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.2rem;
+    }
+
+    #hm {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.25rem, 4vw, 1.7rem);
+      color: var(--br);
+      text-align: center;
+      transition: opacity .28s ease;
+      line-height: 1.3;
+    }
+
+    /* modo volume */
+    #hm.vol {
+      font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+      font-weight: 700;
+      color: var(--brD);
+      animation: hpulse 1.1s ease-in-out infinite;
+    }
+
+    @keyframes hpulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .62;
+      }
+    }
+
+    /* modo legenda */
+    #hm.lyr {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.15rem, 3.6vw, 1.55rem);
+      color: var(--brL);
+    }
+
+    /* área principal */
+    #lm {
+      flex: 1;
+      padding-top: var(--HH);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-bottom: 3.5rem;
+    }
+
+    /* ───── CARTA FECHADA (ENVELOPE) ───────────────────────── */
+    #cl {
+      position: relative;
+      margin-top: clamp(1rem, 3vw, 2rem);
+      width: min(680px, 95vw);
+      height: clamp(300px, calc(100dvh - var(--HH) - 3.5rem), 435px);
+      background: #f7edd4;
+      border-radius: 4px;
+      overflow: visible;
+      box-shadow:
+        0 8px 34px rgba(93, 64, 55, .22),
+        0 2px 8px rgba(93, 64, 55, .12),
+        inset 0 0 0 1px rgba(140, 100, 40, .18);
+    }
+
+    /* brilho de superfície */
+    #cl::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .2) 0%, transparent 55%);
+      pointer-events: none;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    /* SVG com linhas de dobra e abas do envelope */
+    .env-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 4px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* área de endereço (metade inferior) */
+    .env-addr {
+      position: absolute;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 65%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .clt {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.55rem, 4.5vw, 2.3rem);
+      font-weight: 700;
+      color: var(--brD);
+      margin-bottom: .3rem;
+    }
+
+    .cls {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(.85rem, 2vw, 1.05rem);
+      font-style: italic;
+      color: var(--brL);
+    }
+
+    /* ── SELO DE CERA ── */
+    #seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -58%);
+      z-index: 10;
+      cursor: pointer;
+      filter: drop-shadow(0 7px 16px rgba(0, 0, 0, .32));
+      transition: transform .32s ease, filter .32s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      will-change: transform;
+    }
+
+    #seal:hover {
+      transform: translate(-50%, -58%) scale(1.11) rotate(-5deg);
+      filter: drop-shadow(0 11px 22px rgba(0, 0, 0, .38));
+    }
+
+    #seal:active {
+      transform: translate(-50%, -58%) scale(.92) rotate(2deg);
+    }
+
+    .clfrom {
+      position: absolute;
+      bottom: 1.4rem;
+      left: 1.8rem;
+      text-align: left;
+      line-height: 1.85;
+      z-index: 3;
+    }
+
+    .clfrom span {
+      display: block;
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(.82rem, 1.7vw, .98rem);
+      color: var(--brL);
+    }
+
+    /* ───── CARTA ABERTA ────────────────────────────────────── */
+    #ol {
+      display: none;
+      margin-top: clamp(.8rem, 2vw, 1.8rem);
+      width: min(860px, 97vw);
+      min-height: calc(100dvh - var(--HH) - 3rem);
+      background: var(--paper);
+      border-radius: 3px;
+      padding: clamp(1.8rem, 4.5vw, 3.5rem) clamp(1.2rem, 4vw, 3.2rem);
+      box-shadow:
+        0 10px 48px rgba(93, 64, 55, .18),
+        0 2px 8px rgba(93, 64, 55, .1),
+        inset 0 0 0 1px rgba(93, 64, 55, .07);
+      background-image:
+        repeating-linear-gradient(transparent, transparent 32px,
+          rgba(93, 64, 55, .042) 32px, rgba(93, 64, 55, .042) 33px);
+      position: relative;
+    }
+
+    #ol::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .28) 0%, transparent 50%);
+      pointer-events: none;
+      border-radius: 3px;
+    }
+
+    #ol.on {
+      display: block;
+    }
+
+    .orn {
+      text-align: center;
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: .4;
+      letter-spacing: .5rem;
+    }
+
+    /* conteúdo digitado */
+    #lb {
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(.95rem, 2.6vw, 1.08rem);
+      line-height: 2.1;
+      color: var(--brD);
+      min-height: 160px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ll {
+      display: block;
+      min-height: 1.9em;
+    }
+
+    .lb-gap {
+      display: block;
+      height: 1.5em;
+    }
+
+    /* cursor piscante */
+    .cur {
+      display: inline-block;
+      width: 2px;
+      height: .85em;
+      background: var(--br);
+      margin-left: 1px;
+      vertical-align: middle;
+      animation: blink .85s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* assinatura */
+    #sig {
+      margin-top: 3rem;
+      text-align: right;
+      opacity: 0;
+      transition: opacity 1.3s ease;
+      pointer-events: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    #sig.on {
+      opacity: 1;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #sig:hover {
+      opacity: .72;
+    }
+
+    #sig .sn {
+      display: block;
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.1rem, 3.2vw, 1.45rem);
+      font-weight: 600;
+      color: var(--br);
+      line-height: 1.7;
+    }
+
+    /* ───── SCROLLBAR ───────────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--brL);
+      border-radius: 3px;
+    }
+  </style>
 </head>
+
 <body>
- 
-<div id="fh"></div>
- 
-<div id="lock">
-  <div class="ldeco">🌸 💌 🌸</div>
-  <h1 class="ltitle">Digite o código para<br>receber seu presente:</h1>
-  <p class="lhint">Dica: o dia que nasceu o amor da minha vida.</p>
-  <div class="lform">
-    <input type="tel" id="ci" maxlength="8" placeholder="DDMMAAAA"
-           autocomplete="off" inputmode="numeric">
-    <button id="ubtn">Abrir 🔐</button>
-    <p class="emsg" id="em">Código incorreto, tente de novo 💔</p>
+
+  <!-- Corações de fundo -->
+  <div id="fh"></div>
+
+  <!-- ═══════════════ TELA DE BLOQUEIO ═══════════════ -->
+  <div id="lock">
+    <div class="ldeco">🌸 💌 🌸</div>
+    <h1 class="ltitle">Digite o código para<br>receber seu presente:</h1>
+    <p class="lhint">Dica: o dia que nasceu o amor da minha vida.</p>
+    <div class="lform">
+      <input type="tel" id="ci" maxlength="8" placeholder="DDMMAAAA" autocomplete="off" inputmode="numeric">
+      <button id="ubtn">Abrir 🔐</button>
+      <p class="emsg" id="em">Código incorreto, tente de novo 💔</p>
+    </div>
   </div>
-</div>
- 
-<div id="ls">
- 
-  <div id="tz-l" class="tape-zone tape-rew" aria-label="Rebobinar">
-    <span class="tz-icon">◀◀</span>
-    <span class="tz-label">rewind</span>
-  </div>
-  <div id="tz-r" class="tape-zone tape-fwd" aria-label="Avançar">
-    <span class="tz-icon">▶▶</span>
-    <span class="tz-label">ffwd</span>
-  </div>
- 
-  <header id="hdr">
-    <div id="hm">Toque no selo para abrir!</div>
-  </header>
- 
-  <main id="lm">
- 
-    <div id="cl">
-      <svg class="env-lines" viewBox="0 0 100 62" preserveAspectRatio="none"
-           xmlns="http://www.w3.org/2000/svg">
-        <polygon points="0,0 0,62 50,31"   fill="rgba(150,115,50,.09)"/>
-        <polygon points="100,0 100,62 50,31" fill="rgba(150,115,50,.09)"/>
-        <polygon points="0,62 100,62 50,31" fill="rgba(150,115,50,.06)"/>
-        <polygon points="0,0 100,0 50,31"  fill="rgba(135,100,38,.15)"/>
-        <line x1="0"   y1="0"  x2="100" y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5"/>
-        <line x1="100" y1="0"  x2="0"   y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5"/>
-        <rect x=".5" y=".5" width="99" height="61"
-              fill="none" stroke="rgba(130,95,35,.18)" stroke-width=".8" rx=".8"/>
-        <line x1="0" y1="1" x2="100" y2="1" stroke="rgba(100,70,20,.12)" stroke-width="1.5"/>
-      </svg>
- 
-      <div class="env-addr">
-        <div class="clt">Feliz Aniversário</div>
-        <div class="cls">amor da minha vida</div>
-      </div>
- 
-      <div id="seal" role="button" tabindex="0" aria-label="Toque para abrir a carta">
-        <svg width="118" height="118" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="wf" x="-25%" y="-25%" width="150%" height="150%">
-              <feTurbulence type="turbulence" baseFrequency="0.042 0.068"
-                            numOctaves="5" seed="9" result="turb"/>
-              <feDisplacementMap in="SourceGraphic" in2="turb"
-                                 scale="6" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-            <filter id="wsh" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="4.5"/>
-            </filter>
-            <radialGradient id="wg1" cx="36%" cy="29%" r="72%">
-              <stop offset="0%"   stop-color="#df4545"/>
-              <stop offset="28%"  stop-color="#a81818"/>
-              <stop offset="65%"  stop-color="#780808"/>
-              <stop offset="100%" stop-color="#3a0000"/>
-            </radialGradient>
-            <radialGradient id="wg2" cx="32%" cy="24%" r="50%">
-              <stop offset="0%"   stop-color="rgba(255,175,155,.48)"/>
-              <stop offset="55%"  stop-color="rgba(255,100,80,.07)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-            </radialGradient>
-            <radialGradient id="wg3" cx="50%" cy="50%" r="50%">
-              <stop offset="52%" stop-color="rgba(0,0,0,0)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,.42)"/>
-            </radialGradient>
-          </defs>
-          <ellipse cx="51" cy="59" rx="33" ry="8" fill="rgba(0,0,0,.32)" filter="url(#wsh)"/>
-          <circle cx="50" cy="48" r="37" fill="url(#wg1)" filter="url(#wf)"/>
-          <circle cx="50" cy="48" r="37" fill="url(#wg2)" filter="url(#wf)"/>
-          <circle cx="50" cy="48" r="37" fill="url(#wg3)" filter="url(#wf)"/>
-          <circle cx="50" cy="48" r="27.5" fill="none"
-                  stroke="rgba(255,200,190,.3)" stroke-width="1.8" stroke-dasharray="4.5 3"/>
-          <circle cx="50" cy="48" r="25.5" fill="none"
-                  stroke="rgba(15,0,0,.4)" stroke-width=".9"/>
-          <path d="M50 64 C50 64 30 51 30 39 C30 31 37 27 43 31
-                   C46 33 49 37 50 40 C51 37 54 33 57 31
-                   C63 27 70 31 70 39 C70 51 50 64 50 64Z"
-                fill="rgba(255,210,205,.75)" stroke="rgba(50,0,0,.38)" stroke-width="1.3"/>
-          <line x1="26" y1="57" x2="71" y2="33"
-                stroke="rgba(255,218,210,.85)" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M71,33 L63,30 L66,39 Z" fill="rgba(255,218,210,.85)"/>
-          <path d="M26,57 L19,51 M26,57 L19,63"
-                stroke="rgba(255,218,210,.85)" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M39,30 Q41,34 39,38" stroke="rgba(50,0,0,.2)"  stroke-width=".85" fill="none" stroke-linecap="round"/>
-          <path d="M62,32 Q63,36 61,40" stroke="rgba(50,0,0,.17)" stroke-width=".75" fill="none" stroke-linecap="round"/>
-          <path d="M29,53 Q27,57 30,60" stroke="rgba(50,0,0,.16)" stroke-width=".7"  fill="none" stroke-linecap="round"/>
-          <ellipse cx="37" cy="33" rx="6.5" ry="3.5"
-                   fill="rgba(255,195,175,.28)" transform="rotate(-30,37,33)"/>
-          <ellipse cx="39" cy="30" rx="2.8" ry="1.5"
-                   fill="rgba(255,225,210,.42)" transform="rotate(-25,39,30)"/>
+
+  <!-- ═══════════════ TELA DA CARTA ═══════════════ -->
+  <div id="ls">
+
+    <!-- ── 3 Zonas K7: ◀◀ rewind | ⏸ pause | ▶▶ ffwd ── -->
+    <div id="tz-l" class="tape-zone" aria-label="Rebobinar">
+      <span class="tz-icon">◀◀</span>
+      <span class="tz-label">rewind</span>
+    </div>
+    <div id="tz-c" class="tape-zone" aria-label="Pausar">
+      <span class="tz-icon">⏸</span>
+      <span class="tz-label">pause</span>
+    </div>
+    <div id="tz-r" class="tape-zone" aria-label="Avançar">
+      <span class="tz-icon">▶▶</span>
+      <span class="tz-label">ffwd</span>
+    </div>
+
+    <!-- cabeçalho fixo -->
+    <header id="hdr">
+      <div id="hm">Toque no selo para abrir!</div>
+    </header>
+
+    <main id="lm">
+
+      <!-- Carta fechada (envelope) -->
+      <div id="cl">
+
+        <!-- ── Linhas de dobra do envelope ── -->
+        <svg class="env-lines" viewBox="0 0 100 62" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- aba esquerda -->
+          <polygon points="0,0 0,62 50,31" fill="rgba(150,115,50,.09)" />
+          <!-- aba direita -->
+          <polygon points="100,0 100,62 50,31" fill="rgba(150,115,50,.09)" />
+          <!-- aba inferior -->
+          <polygon points="0,62 100,62 50,31" fill="rgba(150,115,50,.06)" />
+          <!-- aba superior (selada) — ligeiramente mais escura -->
+          <polygon points="0,0 100,0 50,31" fill="rgba(135,100,38,.15)" />
+          <!-- linhas de dobra diagonais -->
+          <line x1="0" y1="0" x2="100" y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5" />
+          <line x1="100" y1="0" x2="0" y2="62" stroke="rgba(130,95,35,.28)" stroke-width=".5" />
+          <!-- borda externa -->
+          <rect x=".5" y=".5" width="99" height="61" fill="none" stroke="rgba(130,95,35,.18)" stroke-width=".8"
+            rx=".8" />
+          <!-- sutil sombra interna no topo (profundidade da aba) -->
+          <line x1="0" y1="1" x2="100" y2="1" stroke="rgba(100,70,20,.12)" stroke-width="1.5" />
         </svg>
-      </div>
- 
-      <div class="clfrom">
-        <span>De: Lucca</span>
-        <span>Para: meu amor</span>
-      </div>
-    </div>
- 
-    <div id="ol">
-      <div class="orn">✿ ♡ ✿</div>
-      <div id="lb"></div>
-      <div id="sig">
-        <span class="sn">Lucca A. Gomes — para meu amor, M. Carolina Gama</span>
-      </div>
-    </div>
- 
-  </main>
-</div>
- 
-<audio id="am" src="audio/love-like-you.mp3"   preload="auto"></audio>
-<audio id="ab" src="audio/instrumental_bg.mp3" preload="auto" loop></audio>
- 
-<script>
-(function(){
-  const c  = document.getElementById('fh');
-  const ch = ['♥','♡','✿','❀','✾','❣'];
-  for(let i = 0; i < 18; i++){
-    const el = document.createElement('span');
-    el.className = 'fh';
-    el.textContent = ch[i % ch.length];
-    el.style.left              = (Math.random() * 100) + 'vw';
-    el.style.fontSize          = (.55 + Math.random() * .85) + 'rem';
-    el.style.animationDuration = (14 + Math.random() * 22) + 's';
-    el.style.animationDelay    = (Math.random() * 28) + 's';
-    c.appendChild(el);
-  }
-})();
- 
-const CODE = '01041999';
-const ciEl = document.getElementById('ci');
-const emEl = document.getElementById('em');
- 
-function tryUnlock() {
-  if (ciEl.value.replace(/\D/g,'') === CODE) {
-    document.getElementById('lock').style.display = 'none';
-    document.getElementById('ls').classList.add('on');
-  } else {
-    ciEl.classList.add('shake');
-    emEl.classList.add('on');
-    ciEl.value = '';
-    setTimeout(() => ciEl.classList.remove('shake'), 460);
-  }
-}
-document.getElementById('ubtn').addEventListener('click', tryUnlock);
-ciEl.addEventListener('keydown', e => {
-  emEl.classList.remove('on');
-  if (e.key === 'Enter') tryUnlock();
-});
-document.getElementById('seal').addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') openLetter();
-});
- 
-const AM   = document.getElementById('am');
-const AB   = document.getElementById('ab');
-const hm   = document.getElementById('hm');
-const cl   = document.getElementById('cl');
-const ol   = document.getElementById('ol');
-const lb   = document.getElementById('lb');
-const sig  = document.getElementById('sig');
-const lsEl = document.getElementById('ls');
-const tzL  = document.getElementById('tz-l');
-const tzR  = document.getElementById('tz-r');
- 
-let isOpen   = false;
-let playing  = false;
-let finished = false;
-let timers   = [];
-let rafId    = null;
- 
-function setHdr(txt, cls) {
-  hm.style.transition = 'opacity .28s ease';
-  hm.style.opacity = '0';
-  setTimeout(() => {
-    hm.className   = cls || '';
-    hm.textContent = txt;
-    hm.style.transition = 'opacity .28s ease';
-    hm.style.opacity = '1';
-  }, 285);
-}
- 
-const EV = [
-  { t:  6900, ly: 'If I could begin to be',                     tx: 'Se eu pudesse ser assim' },
-  { t:  9900, ly: 'Half of what you think of me',               tx: 'Só metade do que pensa de mim' },
-  { t: 12700, ly: 'I could do about anything',                  tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 15100, ly: 'I could even learn how to love',             tx: 'Até aprender a amar' },
-  { tx: null, bl: true },
-  { t: 19200, ly: 'When I see the way you act',                 tx: 'Quando eu te vejo agir' },
-  { t: 22000, ly: "Wondering when I'm coming back",             tx: 'Imaginando quando vou chegar' },
-  { t: 24700, ly: 'I could do about anything',                  tx: 'Qualquer coisa eu poderia fazer' },
-  { t: 27100, ly: 'I could even learn how to love... like you', tx: 'Até aprender a amar... como você' },
-  { t: 31945, ly: '♪',                                          tx: null, bl: true },
-  { t: 54360, ly: 'I always thought I might be bad',            tx: 'Sempre pensei que era ruim' },
-  { t: 57500, ly: "Now I'm sure that it's true",                tx: 'Tenho agora certeza' },
-  { t: 60600, ly: "'Cause I think you're so good",              tx: 'Pois você me faz bem' },
-  { t: 63660, ly: "And I'm nothing like you",                   tx: 'Eu sou só um ninguém' },
-  { tx: null, bl: true },
-  { t: 66600, ly: 'Look at you go',                             tx: 'Veja você' },
-  { t: 67800, ly: 'I just adore you',                           tx: 'Como eu te adoro' },
-  { t: 70000, ly: 'I wish that I knew',                         tx: 'Só queria saber' },
-  { t: 73000, ly: "What makes you think I'm so special?",       tx: 'Por que eu sou tão especial?' },
-  { tx: null, bl: true },
-  { t: 79550, ly: 'If I could begin to do',                     tx: 'Se eu pudesse só fazer' },
-  { t: 82800, ly: 'Something that does right by you',           tx: 'A coisa certa pra você' },
-  { t: 87000, ly: 'I would do about anything',                  tx: 'Qualquer coisa eu iria fazer' },
-  { t: 89600, ly: 'I would even learn how to love',             tx: 'Até aprender a amar' },
-  { t: 93000, ly: '♪',                                          tx: null, bl: true },
-  { t: 98400, ly: 'When I see the way you look',                tx: 'Quando te vejo me olhar' },
-  { t:101100, ly: 'Shaken by how long it took',                 tx: 'Feliz por me ver voltar' },
-  { t:103700, ly: 'I could do about anything',                  tx: 'Qualquer coisa eu poderia fazer' },
-  { t:105900, ly: 'I could even learn how to love like you',    tx: 'Até aprender a amar como você' },
-  { t:111000, ly: '♪',                                          tx: null, bl: true },
-  { t:114800, ly: 'Love like you',                              tx: 'Amar como você' },
-  { t:117000, ly: '♪',                                          tx: null, bl: true },
-  { t:121000, ly: 'Love me like you',                           tx: 'Amar a mim como você' },
-  { t:123456, ly: '♪',                                          tx: null },
-];
-const MEND = 138500;
- 
-const textEvents = (function() {
-  const arr = [];
-  let pendingGap = false;
-  EV.forEach(ev => {
-    if (ev.bl) pendingGap = true;
-    if (ev.tx != null) {
-      ev.needsGap   = pendingGap;
-      pendingGap    = false;
-      ev.lineEl     = null;
-      ev._lastChars = -1;
-      arr.push(ev);
+
+        <!-- ── Texto central inferior ── -->
+        <div class="env-addr">
+          <div class="clt">Feliz Aniversário</div>
+          <div class="cls">amor da minha vida</div>
+        </div>
+
+        <!-- ── Selo de cera (centro geométrico do envelope) ── -->
+        <div id="seal" role="button" tabindex="0" aria-label="Toque para abrir a carta">
+          <svg width="118" height="118" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Distorção orgânica das bordas — simula cera derretida -->
+              <filter id="wf" x="-25%" y="-25%" width="150%" height="150%">
+                <feTurbulence type="turbulence" baseFrequency="0.042 0.068" numOctaves="5" seed="9" result="turb" />
+                <feDisplacementMap in="SourceGraphic" in2="turb" scale="6" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+              <!-- Blur para sombra -->
+              <filter id="wsh" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="4.5" />
+              </filter>
+              <!-- Gradiente principal da cera: carmesim rico -->
+              <radialGradient id="wg1" cx="36%" cy="29%" r="72%">
+                <stop offset="0%" stop-color="#df4545" />
+                <stop offset="28%" stop-color="#a81818" />
+                <stop offset="65%" stop-color="#780808" />
+                <stop offset="100%" stop-color="#3a0000" />
+              </radialGradient>
+              <!-- Reflexo de luz (vela) -->
+              <radialGradient id="wg2" cx="32%" cy="24%" r="50%">
+                <stop offset="0%" stop-color="rgba(255,175,155,.48)" />
+                <stop offset="55%" stop-color="rgba(255,100,80,.07)" />
+                <stop offset="100%" stop-color="rgba(0,0,0,0)" />
+              </radialGradient>
+              <!-- Vinheta nas bordas (profundidade) -->
+              <radialGradient id="wg3" cx="50%" cy="50%" r="50%">
+                <stop offset="52%" stop-color="rgba(0,0,0,0)" />
+                <stop offset="100%" stop-color="rgba(0,0,0,.42)" />
+              </radialGradient>
+            </defs>
+
+            <!-- Sombra projetada -->
+            <ellipse cx="51" cy="59" rx="33" ry="8" fill="rgba(0,0,0,.32)" filter="url(#wsh)" />
+
+            <!-- Corpo da cera (círculo distorcido — borda orgânica) -->
+            <circle cx="50" cy="48" r="37" fill="url(#wg1)" filter="url(#wf)" />
+            <!-- Reflexo de luz sobre a cera -->
+            <circle cx="50" cy="48" r="37" fill="url(#wg2)" filter="url(#wf)" />
+            <!-- Escurecimento nas bordas -->
+            <circle cx="50" cy="48" r="37" fill="url(#wg3)" filter="url(#wf)" />
+
+            <!-- Anel interno do carimbo (duplo, estilo brasão) -->
+            <circle cx="50" cy="48" r="27.5" fill="none" stroke="rgba(255,200,190,.3)" stroke-width="1.8"
+              stroke-dasharray="4.5 3" />
+            <circle cx="50" cy="48" r="25.5" fill="none" stroke="rgba(15,0,0,.4)" stroke-width=".9" />
+
+            <!-- Coração esculpido (relevo baixo) -->
+            <path d="M50 64
+                   C50 64 30 51 30 39
+                   C30 31 37 27 43 31
+                   C46 33 49 37 50 40
+                   C51 37 54 33 57 31
+                   C63 27 70 31 70 39
+                   C70 51 50 64 50 64Z" fill="rgba(255,210,205,.75)" stroke="rgba(50,0,0,.38)" stroke-width="1.3" />
+
+            <!-- Flecha — haste -->
+            <line x1="26" y1="57" x2="71" y2="33" stroke="rgba(255,218,210,.85)" stroke-width="2.4"
+              stroke-linecap="round" />
+            <!-- Ponta da flecha -->
+            <path d="M71,33 L63,30 L66,39 Z" fill="rgba(255,218,210,.85)" />
+            <!-- Rabo da flecha (duas penas) -->
+            <path d="M26,57 L19,51 M26,57 L19,63" stroke="rgba(255,218,210,.85)" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+
+            <!-- Imperfeições da cera (micro-fissuras) -->
+            <path d="M39,30 Q41,34 39,38" stroke="rgba(50,0,0,.2)" stroke-width=".85" fill="none"
+              stroke-linecap="round" />
+            <path d="M62,32 Q63,36 61,40" stroke="rgba(50,0,0,.17)" stroke-width=".75" fill="none"
+              stroke-linecap="round" />
+            <path d="M29,53 Q27,57 30,60" stroke="rgba(50,0,0,.16)" stroke-width=".7" fill="none"
+              stroke-linecap="round" />
+
+            <!-- Reflexo especular (brilho de vela no topo-esquerdo) -->
+            <ellipse cx="37" cy="33" rx="6.5" ry="3.5" fill="rgba(255,195,175,.28)" transform="rotate(-30,37,33)" />
+            <ellipse cx="39" cy="30" rx="2.8" ry="1.5" fill="rgba(255,225,210,.42)" transform="rotate(-25,39,30)" />
+          </svg>
+        </div><!-- #seal -->
+
+        <!-- De / Para (canto inferior esquerdo) -->
+        <div class="clfrom">
+          <span>De: Lucca</span>
+          <span>Para: meu amor</span>
+        </div>
+
+      </div><!-- #cl -->
+
+      <!-- Carta aberta -->
+      <div id="ol">
+        <div class="orn">✿ ♡ ✿</div>
+        <div id="lb"></div>
+        <div id="sig">
+          <span class="sn">Lucca A. Gomes — para meu amor, M. Carolina Gama</span>
+        </div>
+      </div><!-- #ol -->
+
+    </main>
+  </div><!-- #ls -->
+
+  <!-- Áudios -->
+  <audio id="am" src="audio/love-like-you.mp3" preload="auto"></audio>
+  <audio id="ab" src="audio/instrumental_bg.mp3" preload="auto" loop></audio>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════
+       CORAÇÕES FLUTUANTES
+    ══════════════════════════════════════════════════════════ */
+    (function () {
+      const c = document.getElementById('fh');
+      const ch = ['♥', '♡', '✿', '❀', '✾', '❣'];
+      for (let i = 0; i < 18; i++) {
+        const el = document.createElement('span');
+        el.className = 'fh';
+        el.textContent = ch[i % ch.length];
+        el.style.left = (Math.random() * 100) + 'vw';
+        el.style.fontSize = (.55 + Math.random() * .85) + 'rem';
+        el.style.animationDuration = (14 + Math.random() * 22) + 's';
+        el.style.animationDelay = (Math.random() * 28) + 's';
+        c.appendChild(el);
+      }
+    })();
+
+    /* ══════════════════════════════════════════════════════════
+       TELA DE BLOQUEIO
+    ══════════════════════════════════════════════════════════ */
+    const CODE = '01041999';
+    const ciEl = document.getElementById('ci');
+    const emEl = document.getElementById('em');
+
+    function tryUnlock() {
+      const val = ciEl.value.replace(/\D/g, '');
+      if (val === CODE) {
+        document.getElementById('lock').style.display = 'none';
+        document.getElementById('ls').classList.add('on');
+      } else {
+        ciEl.classList.add('shake');
+        emEl.classList.add('on');
+        ciEl.value = '';
+        setTimeout(() => ciEl.classList.remove('shake'), 460);
+      }
     }
-  });
-  arr.forEach((ev, i) => {
-    ev.endT = i < arr.length - 1 ? arr[i + 1].t : MEND;
-  });
-  return arr;
-})();
- 
-let lastLyrIdx = -1;
-let addedLines = -1;
-let cursorEl   = null;
- 
-function syncLoop() {
-  if (!playing || finished) return;
-  const t = AM.currentTime * 1000;
- 
-  if (!tapeMode) {
-    let lyrIdx = -1;
-    for (let i = EV.length - 1; i >= 0; i--) {
-      if (EV[i].t !== undefined && t >= EV[i].t) { lyrIdx = i; break; }
+
+    document.getElementById('ubtn').addEventListener('click', tryUnlock);
+    ciEl.addEventListener('keydown', e => {
+      emEl.classList.remove('on');
+      if (e.key === 'Enter') tryUnlock();
+    });
+
+    /* Teclado: Enter no selo também abre */
+    document.getElementById('seal').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') openLetter();
+    });
+
+    /* ══════════════════════════════════════════════════════════
+       ESTADO GERAL
+    ══════════════════════════════════════════════════════════ */
+    const AM = document.getElementById('am');
+    const AB = document.getElementById('ab');
+    const hm = document.getElementById('hm');
+    const cl = document.getElementById('cl');
+    const ol = document.getElementById('ol');
+    const lb = document.getElementById('lb');
+    const sig = document.getElementById('sig');
+    const lsEl = document.getElementById('ls');
+    const tzL = document.getElementById('tz-l');
+    const tzC = document.getElementById('tz-c');
+    const tzR = document.getElementById('tz-r');
+
+    let isOpen = false;
+    let playing = false;
+    let finished = false;
+    let closing = false;   /* animação de rewind-fechar em curso */
+    let isPaused = false;   /* pausado via zona central */
+    let timers = [];      /* IDs de setTimeout para limpar ao fechar */
+    let rafId = null;    /* handle do syncLoop */
+
+    /* ══════════════════════════════════════════════════════════
+       HELPER: ATUALIZA CABEÇALHO COM FADE
+    ══════════════════════════════════════════════════════════ */
+    function setHdr(txt, cls) {
+      hm.style.transition = 'opacity .28s ease';
+      hm.style.opacity = '0';
+      setTimeout(() => {
+        hm.className = cls || '';
+        hm.textContent = txt;
+        hm.style.transition = 'opacity .28s ease';
+        hm.style.opacity = '1';
+      }, 285);
     }
-    if (lyrIdx !== lastLyrIdx) {
-      lastLyrIdx = lyrIdx;
-      if (lyrIdx >= 0) {
-        const txt = EV[lyrIdx].ly;
-        if (hm.textContent !== txt) {
-          hm.style.transition = 'opacity .2s';
+
+    /* ══════════════════════════════════════════════════════════
+       DADOS DE TIMING
+       t  = ms a partir do início da música
+       ly = legenda karaoke (cabeçalho)
+       tx = texto digitado na carta (null = só instrumental)
+       bl = true → inserir linha em branco antes (separar estrofe)
+    ══════════════════════════════════════════════════════════ */
+    const EV = [
+      /* ── Estrofe 1 ── */
+      { t: 6900, ly: 'If I could begin to be', tx: 'Se eu pudesse ser assim' },
+      { t: 9900, ly: 'Half of what you think of me', tx: 'Só metade do que pensa de mim' },
+      { t: 12700, ly: 'I could do about anything', tx: 'Qualquer coisa eu poderia fazer' },
+      { t: 15100, ly: 'I could even learn how to love', tx: 'Até aprender a amar' },
+      /* ── Refrão 1 ── */
+      { tx: null, bl: true },
+      { t: 19200, ly: 'When I see the way you act', tx: 'Quando eu te vejo agir' },
+      { t: 22000, ly: "Wondering when I'm coming back", tx: 'Imaginando quando vou chegar' },
+      { t: 24700, ly: 'I could do about anything', tx: 'Qualquer coisa eu poderia fazer' },
+      { t: 27100, ly: 'I could even learn how to love... like you', tx: 'Até aprender a amar... como você' },
+      /* ── Instrumental ── */
+      { t: 31945, ly: '♪', tx: null, bl: true },
+      /* ── Estrofe 2 ── */
+      { t: 54360, ly: 'I always thought I might be bad', tx: 'Sempre pensei que era ruim' },
+      { t: 57500, ly: "Now I'm sure that it's true", tx: 'Tenho agora certeza' },
+      { t: 60600, ly: "'Cause I think you're so good", tx: 'Pois você me faz bem' },
+      { t: 63660, ly: "And I'm nothing like you", tx: 'Eu sou só um ninguém' },
+      { tx: null, bl: true },
+      { t: 66600, ly: 'Look at you go', tx: 'Veja você' },
+      { t: 67800, ly: 'I just adore you', tx: 'Como eu te adoro' },
+      { t: 70000, ly: 'I wish that I knew', tx: 'Só queria saber' },
+      { t: 73000, ly: "What makes you think I'm so special?", tx: 'Por que eu sou tão especial?' },
+      /* ── Refrão 2 ── */
+      { tx: null, bl: true },
+      { t: 79550, ly: 'If I could begin to do', tx: 'Se eu pudesse só fazer' },
+      { t: 82800, ly: 'Something that does right by you', tx: 'A coisa certa pra você' },
+      { t: 87000, ly: 'I would do about anything', tx: 'Qualquer coisa eu iria fazer' },
+      { t: 89600, ly: 'I would even learn how to love', tx: 'Até aprender a amar' },
+      /* ── Instrumental ── */
+      { t: 93000, ly: '♪', tx: null, bl: true },
+      /* ── Refrão final ── */
+      { t: 98400, ly: 'When I see the way you look', tx: 'Quando te vejo me olhar' },
+      { t: 101100, ly: 'Shaken by how long it took', tx: 'Feliz por me ver voltar' },
+      { t: 103700, ly: 'I could do about anything', tx: 'Qualquer coisa eu poderia fazer' },
+      { t: 105900, ly: 'I could even learn how to love like you', tx: 'Até aprender a amar como você' },
+      /* ── Instrumental ── */
+      { t: 111000, ly: '♪', tx: null, bl: true },
+      { t: 114800, ly: 'Love like you', tx: 'Amar como você' },
+      { t: 117000, ly: '♪', tx: null, bl: true },
+      { t: 121000, ly: 'Love me like you', tx: 'Amar a mim como você' },
+      /* ── Instrumental ── */
+      { t: 123456, ly: '♪', tx: null },
+    ];
+
+    /* Duração real do arquivo: 138.839s */
+    const MEND = 138500;
+
+    /* ══════════════════════════════════════════════════════════
+       PRÉ-PROCESSAMENTO DOS EVENTOS DE TEXTO
+    ══════════════════════════════════════════════════════════ */
+    const textEvents = (function () {
+      const arr = [];
+      let pendingGap = false;
+      EV.forEach(ev => {
+        if (ev.bl) pendingGap = true;
+        if (ev.tx != null) {
+          ev.needsGap = pendingGap;
+          pendingGap = false;
+          ev.lineEl = null;
+          ev._lastChars = -1;
+          arr.push(ev);
+        }
+      });
+      arr.forEach((ev, i) => {
+        ev.endT = i < arr.length - 1 ? arr[i + 1].t : MEND;
+      });
+      return arr;
+    })();
+
+    /* estado do loop RAF */
+    let lastLyrIdx = -1;
+    let addedLines = -1;
+    let cursorEl = null;
+
+    /* ══════════════════════════════════════════════════════════
+       LOOP DE SINCRONIA (requestAnimationFrame)
+       Fonte de verdade: audio.currentTime — nunca desvia.
+    ══════════════════════════════════════════════════════════ */
+    function syncLoop() {
+      /* para se estiver em modo de fechamento, pausado, ou não tocando */
+      if (!playing || finished || closing || isPaused) return;
+
+      const t = AM.currentTime * 1000; /* ms */
+
+      /* ── Karaoke: atualiza legenda (só fora do modo K7) ── */
+      if (!tapeMode) {
+        let lyrIdx = -1;
+        for (let i = EV.length - 1; i >= 0; i--) {
+          if (EV[i].t !== undefined && t >= EV[i].t) { lyrIdx = i; break; }
+        }
+        if (lyrIdx !== lastLyrIdx) {
+          lastLyrIdx = lyrIdx;
+          if (lyrIdx >= 0) {
+            const newTxt = EV[lyrIdx].ly;
+            if (hm.textContent !== newTxt) {
+              hm.style.transition = 'opacity .2s';
+              hm.style.opacity = '0';
+              setTimeout(() => {
+                hm.className = 'lyr';
+                hm.textContent = newTxt;
+                hm.style.opacity = '1';
+              }, 200);
+            }
+          }
+        }
+      }
+
+      /* ── Remoção retroativa (rewind remove linhas do DOM) ── */
+      removeLinesBeyond(t);
+
+      /* ── Typewriter: determina evento de texto atual ── */
+      let txtIdx = -1;
+      for (let i = textEvents.length - 1; i >= 0; i--) {
+        if (t >= textEvents[i].t) { txtIdx = i; break; }
+      }
+
+      /* Cria elementos DOM para todas as linhas até a atual */
+      while (addedLines < txtIdx) {
+        addedLines++;
+        const ev = textEvents[addedLines];
+        if (ev.needsGap) {
+          const gap = document.createElement('span');
+          gap.className = 'lb-gap';
+          lb.appendChild(gap);
+        }
+        const line = document.createElement('span');
+        line.className = 'll';
+        lb.appendChild(line);
+        ev.lineEl = line;
+        if (addedLines < txtIdx) {
+          line.textContent = ev.tx;
+          ev._lastChars = ev.tx.length;
+        }
+      }
+
+      /* Atualiza a linha atual, caractere a caractere */
+      if (txtIdx >= 0) {
+        const ev = textEvents[txtIdx];
+        if (ev.lineEl) {
+          const elapsed = Math.max(0, t - ev.t);
+          const totalTime = ev.endT - ev.t;
+          const charDelay = Math.min(68, totalTime * 0.78 / ev.tx.length);
+          const chars = Math.min(Math.floor(elapsed / charDelay), ev.tx.length);
+
+          if (chars !== ev._lastChars) {
+            ev._lastChars = chars;
+            ev.lineEl.textContent = ev.tx.slice(0, chars);
+            if (chars < ev.tx.length) {
+              if (!cursorEl) { cursorEl = document.createElement('span'); cursorEl.className = 'cur'; }
+              ev.lineEl.appendChild(cursorEl);
+              if (!tapeMode) ev.lineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+              if (cursorEl && cursorEl.parentNode === ev.lineEl) cursorEl.remove();
+            }
+          }
+        }
+      }
+
+      rafId = requestAnimationFrame(syncLoop);
+    }
+
+    /* Remove do DOM linhas cujo t > currentTime (usado pelo rewind) */
+    function removeLinesBeyond(tMs) {
+      while (addedLines >= 0 && textEvents[addedLines] && textEvents[addedLines].t > tMs) {
+        const ev = textEvents[addedLines];
+        if (ev.lineEl) {
+          if (ev.needsGap) {
+            const mg = ev.lineEl.previousSibling;
+            if (mg && mg.classList && mg.classList.contains('lb-gap')) mg.remove();
+          }
+          ev.lineEl.remove();
+          ev.lineEl = null;
+          ev._lastChars = -1;
+        }
+        addedLines--;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ABRIR CARTA
+    ══════════════════════════════════════════════════════════ */
+    document.getElementById('seal').addEventListener('click', openLetter);
+
+    function openLetter() {
+      if (isOpen) return;
+      isOpen = true;
+
+      cl.style.transition = 'opacity .42s ease, transform .42s ease';
+      cl.style.opacity = '0';
+      cl.style.transform = 'scale(.86) translateY(-10px)';
+
+      setTimeout(() => {
+        cl.style.display = 'none';
+
+        lb.innerHTML = '';
+        sig.classList.remove('on');
+        ol.style.opacity = '0';
+        ol.style.transform = 'scale(.91) translateY(18px)';
+        ol.style.transition = 'opacity .55s ease, transform .55s ease';
+        ol.classList.add('on');
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          ol.style.opacity = '1';
+          ol.style.transform = 'none';
+        }));
+
+        setHdr('🔊 Aumente o volume! 🔊', 'vol');
+
+        /* carrega buffer reverso em background */
+        prepareReversed();
+
+        /* após 3s: iniciar música */
+        timers.push(setTimeout(() => {
+          hm.style.transition = 'opacity .65s ease';
           hm.style.opacity = '0';
           setTimeout(() => {
             hm.className = 'lyr';
-            hm.textContent = txt;
+            hm.textContent = '♪';
+            hm.style.transition = 'opacity .35s ease';
             hm.style.opacity = '1';
-          }, 200);
-        }
-      }
+            startMusic();
+          }, 680);
+        }, 3000));
+
+      }, 440);
     }
-  }
- 
-  while (addedLines >= 0 && textEvents[addedLines] && textEvents[addedLines].t > t) {
-    const ev = textEvents[addedLines];
-    if (ev.lineEl) {
-      if (ev.needsGap) {
-        const mg = ev.lineEl.previousSibling;
-        if (mg && mg.classList && mg.classList.contains('lb-gap')) mg.remove();
-      }
-      ev.lineEl.remove();
-      ev.lineEl     = null;
-      ev._lastChars = -1;
-    }
-    addedLines--;
-  }
- 
-  let txtIdx = -1;
-  for (let i = textEvents.length - 1; i >= 0; i--) {
-    if (textEvents[i].t !== undefined && t >= textEvents[i].t) { txtIdx = i; break; }
-  }
- 
-  while (addedLines < txtIdx) {
-    addedLines++;
-    const ev = textEvents[addedLines];
-    if (ev.needsGap) {
-      const g = document.createElement('span');
-      g.className = 'lb-gap';
-      lb.appendChild(g);
-    }
-    const line = document.createElement('span');
-    line.className = 'll';
-    lb.appendChild(line);
-    ev.lineEl = line;
-    if (addedLines < txtIdx) {
-      line.textContent = ev.tx;
-      ev._lastChars = ev.tx.length;
-    }
-  }
- 
-  if (txtIdx >= 0) {
-    const ev = textEvents[txtIdx];
-    if (ev.lineEl && ev.t !== undefined) {
-      const elapsed   = Math.max(0, t - ev.t);
-      const charDelay = Math.min(68, (ev.endT - ev.t) * 0.78 / ev.tx.length);
-      const chars     = Math.min(Math.floor(elapsed / charDelay), ev.tx.length);
-      if (chars !== ev._lastChars) {
-        ev._lastChars = chars;
-        ev.lineEl.textContent = ev.tx.slice(0, chars);
-        if (chars < ev.tx.length) {
-          if (!cursorEl) { cursorEl = document.createElement('span'); cursorEl.className = 'cur'; }
-          ev.lineEl.appendChild(cursorEl);
-          if (!tapeMode) ev.lineEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
-        } else {
-          if (cursorEl && cursorEl.parentNode === ev.lineEl) cursorEl.remove();
-        }
-      }
-    }
-  }
- 
-  rafId = requestAnimationFrame(syncLoop);
-}
- 
-document.getElementById('seal').addEventListener('click', openLetter);
- 
-function openLetter() {
-  if (isOpen) return;
-  isOpen = true;
- 
-  cl.style.transition = 'opacity .42s ease, transform .42s ease';
-  cl.style.opacity    = '0';
-  cl.style.transform  = 'scale(.86) translateY(-10px)';
- 
-  setTimeout(() => {
-    cl.style.display = 'none';
-    lb.innerHTML = '';
-    sig.classList.remove('on');
-    ol.style.opacity    = '0';
-    ol.style.transform  = 'scale(.91) translateY(18px)';
-    ol.style.transition = 'opacity .55s ease, transform .55s ease';
-    ol.classList.add('on');
- 
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      ol.style.opacity  = '1';
-      ol.style.transform = 'none';
-    }));
- 
-    setHdr('🔊 Aumente o volume! 🔊', 'vol');
- 
-    prepareReversed();
- 
-    timers.push(setTimeout(() => {
-      hm.style.transition = 'opacity .65s ease';
-      hm.style.opacity    = '0';
-      setTimeout(() => {
-        hm.className   = 'lyr';
-        hm.textContent = '♪';
-        hm.style.transition = 'opacity .35s ease';
-        hm.style.opacity    = '1';
-        startMusic();
-      }, 680);
-    }, 3000));
-  }, 440);
-}
- 
-function startMusic() {
-  if (playing) return;
-  playing = true;
-  AM.currentTime = 0;
-  AM.play().catch(() => {});
-  tzL.classList.add('playable');
-  tzR.classList.add('playable');
-  timers.push(setTimeout(() => { if (!finished) finishMusic(); }, MEND));
-  AM.addEventListener('ended', () => { if (!finished) finishMusic(); }, { once: true });
-  rafId = requestAnimationFrame(syncLoop);
-}
- 
-function finishMusic() {
-  if (finished) return;
-  finished = true;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  if (cursorEl) { cursorEl.remove(); cursorEl = null; }
-  tzL.classList.remove('playable');
-  tzR.classList.remove('playable');
-  stopTape();
-  sig.classList.add('on');
-  setHdr('Toque na assinatura para fechar!');
-  AB.currentTime = 0;
-  AB.play().catch(() => {});
-}
- 
-sig.addEventListener('click', closeLetter);
- 
-function closeLetter() {
-  if (!isOpen) return;
-  isOpen = false;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  timers.forEach(clearTimeout); timers = [];
-  stopTape();
-  AM.pause(); AM.currentTime = 0;
-  AB.pause(); AB.currentTime = 0;
-  playing = false; finished = false;
-  lastLyrIdx = -1; addedLines = -1; cursorEl = null;
-  textEvents.forEach(ev => { ev.lineEl = null; ev._lastChars = -1; });
-  tzL.classList.remove('playable');
-  tzR.classList.remove('playable');
- 
-  ol.style.transition = 'opacity .4s ease, transform .4s ease';
-  ol.style.opacity    = '0';
-  ol.style.transform  = 'scale(.91) translateY(10px)';
- 
-  setTimeout(() => {
-    ol.classList.remove('on');
-    ol.style.opacity = ol.style.transform = ol.style.transition = '';
-    cl.style.display    = '';
-    cl.style.opacity    = '0';
-    cl.style.transform  = 'scale(.9)';
-    cl.style.transition = 'opacity .52s ease, transform .52s ease';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      cl.style.opacity  = '1';
-      cl.style.transform = 'none';
-    }));
-    setHdr('Toque no selo para abrir!');
-  }, 430);
-}
- 
-const REW_RATE = 4;
-const FFW_RATE = 2;
- 
-let tapeMode  = null;
-let tapeRafId = null;
-let tapePrevT = null;
- 
-let revCtx     = null;
-let revBuffer  = null;
-let revSource  = null;
-let revReady   = false;
-let revLoading = false;
- 
-async function prepareReversed() {
-  if (revReady || revLoading) return;
-  revLoading = true;
-  try {
-    const src = AM.getAttribute('src') || 'audio/love-like-you.mp3';
-    const res = await fetch(src);
-    const ab  = await res.arrayBuffer();
-    revCtx    = new (window.AudioContext || window.webkitAudioContext)();
-    const dec = await revCtx.decodeAudioData(ab);
-    revBuffer = revCtx.createBuffer(dec.numberOfChannels, dec.length, dec.sampleRate);
-    for (let c = 0; c < dec.numberOfChannels; c++) {
-      const s = dec.getChannelData(c);
-      const d = revBuffer.getChannelData(c);
-      for (let i = 0; i < s.length; i++) d[i] = s[s.length - 1 - i];
-    }
-    revReady = true;
-  } catch(e) {
-    console.warn('[K7] buffer reverso indisponível:', e);
-  }
-  revLoading = false;
-}
- 
-function playRevFrom(currentSec) {
-  if (!revReady) return;
-  stopRevSource();
-  const offset = Math.max(0, revBuffer.duration - currentSec);
-  revSource = revCtx.createBufferSource();
-  revSource.buffer = revBuffer;
-  revSource.playbackRate.value = REW_RATE;
-  revSource.connect(revCtx.destination);
-  revSource.start(0, offset);
-}
- 
-function stopRevSource() {
-  if (revSource) {
-    try { revSource.stop(); } catch(_) {}
-    revSource.disconnect();
-    revSource = null;
-  }
-}
- 
-function startRewind() {
-  if (!playing || finished || tapeMode === 'rew') return;
-  if (tapeMode === 'fwd') stopTape();
-  tapeMode = 'rew';
-  tzL.classList.add('pressing');
-  AM.pause();
-  if (revCtx && revCtx.state === 'suspended') revCtx.resume();
-  playRevFrom(AM.currentTime);
-  lsEl.classList.add('vhs-rew');
-  hm.style.transition = 'none';
-  hm.className   = 'k7';
-  hm.textContent = '◀◀  REBOBINANDO';
-  tapePrevT = null;
-  tapeRafId = requestAnimationFrame(rewTick);
-}
- 
-function rewTick(now) {
-  if (tapeMode !== 'rew') return;
-  if (tapePrevT !== null) {
-    const dt      = (now - tapePrevT) / 1000;
-    const newTime = AM.currentTime - dt * REW_RATE;
-    if (newTime <= 0) {
+
+    /* ══════════════════════════════════════════════════════════
+       INICIAR MÚSICA
+    ══════════════════════════════════════════════════════════ */
+    function startMusic() {
+      if (playing) return;
+      playing = true;
+
       AM.currentTime = 0;
-      stopTape();
-      AM.play().catch(() => {});
-      lastLyrIdx = -1;
+      AM.play().catch(() => { });
+
+      /* fallback caso o evento 'ended' não dispare */
+      timers.push(setTimeout(() => { if (!finished && !closing) finishMusic(); }, MEND));
+      AM.addEventListener('ended', () => { if (!finished && !closing) finishMusic(); }, { once: true });
+
+      /* ativa zonas K7 */
+      [tzL, tzC, tzR].forEach(z => z.classList.add('playable'));
+
       rafId = requestAnimationFrame(syncLoop);
-      return;
     }
-    AM.currentTime = newTime;
-    const last = lb.lastElementChild;
-    if (last) last.scrollIntoView({ behavior:'instant', block:'end' });
-  }
-  tapePrevT = now;
-  tapeRafId = requestAnimationFrame(rewTick);
-}
- 
-function startFfwd() {
-  if (!playing || finished || tapeMode === 'fwd') return;
-  if (tapeMode === 'rew') stopTape();
-  tapeMode = 'fwd';
-  tzR.classList.add('pressing');
-  AM.playbackRate = FFW_RATE;
-  lsEl.classList.add('vhs-fwd');
-  hm.style.transition = 'none';
-  hm.className   = 'k7';
-  hm.textContent = '▶▶  AVANÇANDO';
-}
- 
-function stopTape() {
-  if (!tapeMode) return;
-  const was = tapeMode;
-  tapeMode = null;
-  if (tapeRafId) { cancelAnimationFrame(tapeRafId); tapeRafId = null; }
-  tapePrevT = null;
-  tzL.classList.remove('pressing');
-  tzR.classList.remove('pressing');
-  lsEl.classList.remove('vhs-rew', 'vhs-fwd');
-  if (was === 'rew') {
-    stopRevSource();
-    if (playing && !finished) AM.play().catch(() => {});
-  } else {
-    AM.playbackRate = 1;
-  }
-  lastLyrIdx = -1;
-}
- 
-function bindZone(el, fn) {
-  el.addEventListener('touchstart',  e => { e.preventDefault(); fn(); },       { passive:false });
-  el.addEventListener('touchend',    e => { e.preventDefault(); stopTape(); }, { passive:false });
-  el.addEventListener('touchcancel', e => { e.preventDefault(); stopTape(); }, { passive:false });
-  el.addEventListener('mousedown',   e => { e.preventDefault(); fn(); });
-  el.addEventListener('mouseup',     () => stopTape());
-  el.addEventListener('mouseleave',  () => { if (tapeMode) stopTape(); });
-}
-bindZone(tzL, startRewind);
-bindZone(tzR, startFfwd);
- 
-document.addEventListener('mouseup',  () => { if (tapeMode) stopTape(); });
-document.addEventListener('touchend', () => { if (tapeMode) stopTape(); }, { passive:true });
-</script>
+
+    /* ══════════════════════════════════════════════════════════
+       FIM DA MÚSICA
+    ══════════════════════════════════════════════════════════ */
+    function finishMusic() {
+      /* NÃO executar durante animação de fechamento ou rewind */
+      if (finished || closing) return;
+      finished = true;
+
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (cursorEl) { cursorEl.remove(); cursorEl = null; }
+
+      /* para K7 sem retomar AM */
+      stopTapeClean();
+      [tzL, tzC, tzR].forEach(z => z.classList.remove('playable', 'active'));
+      lsEl.classList.remove('vhs-rew', 'vhs-fwd', 'vhs-pause');
+
+      sig.classList.add('on');
+      setHdr('Toque na assinatura para fechar!');
+
+      AB.currentTime = 0;
+      AB.play().catch(() => { });
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       FECHAR CARTA — anima rewind até t=0, depois fecha
+    ══════════════════════════════════════════════════════════ */
+    sig.addEventListener('click', closeLetter);
+
+    function closeLetter() {
+      if (!isOpen || closing) return;
+      closing = true;
+
+      /* cancela todos os timers pendentes (MEND timeout, etc.) */
+      timers.forEach(clearTimeout);
+      timers = [];
+
+      /* para tudo */
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      stopTapeClean();
+
+      AB.pause(); AB.currentTime = 0;
+      sig.style.pointerEvents = 'none';
+      [tzL, tzC, tzR].forEach(z => z.classList.remove('playable', 'active'));
+      lsEl.classList.remove('vhs-fwd', 'vhs-pause');
+
+      /* se música nem começou, fecha direto */
+      if (!playing || AM.currentTime < 0.05) {
+        finalizeClose();
+        return;
+      }
+
+      AM.pause();
+      isPaused = false;
+
+      /* inicia animação de rewind visual */
+      lsEl.classList.add('vhs-rew');
+      hm.style.transition = 'none';
+      hm.className = 'k7';
+      hm.textContent = '◀◀  Fechando...';
+
+      if (revCtx && revCtx.state === 'suspended') revCtx.resume();
+      playRevFrom(AM.currentTime);
+
+      closeRafPrev = null;
+      closeRafId = requestAnimationFrame(closeRewindTick);
+    }
+
+    let closeRafId = null;
+    let closeRafPrev = null;
+    const CLOSE_SPEED = 4; /* velocidade do rewind de fechamento */
+
+    function closeRewindTick(now) {
+      if (!closing) return;
+      if (closeRafPrev !== null) {
+        const dt = (now - closeRafPrev) / 1000;
+        const newTime = Math.max(0, AM.currentTime - dt * CLOSE_SPEED);
+        AM.currentTime = newTime;
+        removeLinesBeyond(newTime * 1000);
+        const last = lb.lastElementChild;
+        if (last) last.scrollIntoView({ behavior: 'instant', block: 'end' });
+        if (newTime <= 0) {
+          stopRevSource();
+          lsEl.classList.remove('vhs-rew');
+          closeRafId = null;
+          finalizeClose();
+          return;
+        }
+      }
+      closeRafPrev = now;
+      closeRafId = requestAnimationFrame(closeRewindTick);
+    }
+
+    function finalizeClose() {
+      closing = false;
+      isOpen = false;
+      playing = false;
+      finished = false;
+      isPaused = false;
+      tapeMode = null;
+      lastLyrIdx = -1; addedLines = -1; cursorEl = null;
+
+      AM.pause(); AM.currentTime = 0;
+      AM.playbackRate = 1;
+      textEvents.forEach(ev => { ev.lineEl = null; ev._lastChars = -1; });
+      lsEl.classList.remove('vhs-rew', 'vhs-fwd', 'vhs-pause');
+
+      ol.style.transition = 'opacity .4s ease, transform .4s ease';
+      ol.style.opacity = '0';
+      ol.style.transform = 'scale(.91) translateY(10px)';
+
+      setTimeout(() => {
+        ol.classList.remove('on');
+        ol.style.opacity = ol.style.transform = ol.style.transition = '';
+
+        cl.style.display = '';
+        cl.style.opacity = '0';
+        cl.style.transform = 'scale(.9)';
+        cl.style.transition = 'opacity .52s ease, transform .52s ease';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          cl.style.opacity = '1';
+          cl.style.transform = 'none';
+        }));
+
+        sig.style.pointerEvents = '';
+        setHdr('Toque no selo para abrir!');
+      }, 430);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       K7 — FITA CASSETE
+       ◀◀ rewind (×4) | ⏸ pause | ▶▶ ffwd (×4)
+    ══════════════════════════════════════════════════════════ */
+    const TAPE_SPEED = 4;
+
+    let tapeMode = null;  /* 'rew' | 'fwd' | null */
+    let tapeRafId = null;
+    let tapeRafPrev = null;
+
+    /* ── Web Audio — buffer invertido ── */
+    let revCtx = null;
+    let revBuffer = null;
+    let revSource = null;
+    let revReady = false;
+    let revLoading = false;
+
+    async function prepareReversed() {
+      if (revReady || revLoading) return;
+      revLoading = true;
+      try {
+        const src = AM.getAttribute('src') || 'audio/love-like-you.mp3';
+        const res = await fetch(src);
+        const ab = await res.arrayBuffer();
+        revCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const dec = await revCtx.decodeAudioData(ab);
+        revBuffer = revCtx.createBuffer(dec.numberOfChannels, dec.length, dec.sampleRate);
+        for (let c = 0; c < dec.numberOfChannels; c++) {
+          const s = dec.getChannelData(c);
+          const d = revBuffer.getChannelData(c);
+          for (let i = 0; i < s.length; i++) d[i] = s[s.length - 1 - i];
+        }
+        revReady = true;
+      } catch (e) { console.warn('[K7] buffer reverso indisponível:', e); }
+      revLoading = false;
+    }
+
+    function playRevFrom(sec) {
+      if (!revReady) return;
+      stopRevSource();
+      const offset = Math.max(0, revBuffer.duration - sec);
+      revSource = revCtx.createBufferSource();
+      revSource.buffer = revBuffer;
+      revSource.playbackRate.value = TAPE_SPEED;
+      revSource.connect(revCtx.destination);
+      revSource.start(0, offset);
+    }
+    function stopRevSource() {
+      if (!revSource) return;
+      try { revSource.stop(); } catch (_) { }
+      revSource.disconnect(); revSource = null;
+    }
+
+    /* para K7 sem retomar AM (chamado em finishMusic e closeLetter) */
+    function stopTapeClean() {
+      if (!tapeMode) return;
+      const was = tapeMode; tapeMode = null;
+      if (tapeRafId) { cancelAnimationFrame(tapeRafId); tapeRafId = null; }
+      tapeRafPrev = null;
+      tzL.classList.remove('active'); tzC.classList.remove('active'); tzR.classList.remove('active');
+      lsEl.classList.remove('vhs-rew', 'vhs-fwd');
+      if (was === 'rew') stopRevSource();
+      else if (was === 'fwd') AM.playbackRate = 1;
+      lastLyrIdx = -1;
+    }
+
+    /* para K7 e retoma playback */
+    function stopTape() {
+      if (!tapeMode) return;
+      const was = tapeMode;
+      stopTapeClean();
+      if (playing && !finished && !isPaused && !closing) {
+        if (was === 'rew') AM.play().catch(() => { });
+        rafId = requestAnimationFrame(syncLoop);
+      }
+    }
+
+    /* ── REWIND — segurar ── */
+    function startRewind() {
+      if (!playing || finished || closing || tapeMode === 'rew') return;
+      if (tapeMode) stopTapeClean();
+      tapeMode = 'rew';
+      tzL.classList.add('active');
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      AM.pause();
+      if (revCtx && revCtx.state === 'suspended') revCtx.resume();
+      playRevFrom(AM.currentTime);
+      lsEl.classList.add('vhs-rew'); lsEl.classList.remove('vhs-pause');
+      hm.style.transition = 'none'; hm.className = 'k7'; hm.textContent = '◀◀  REBOBINANDO';
+      tapeRafPrev = null;
+      tapeRafId = requestAnimationFrame(rewTick);
+    }
+
+    function rewTick(now) {
+      if (tapeMode !== 'rew') return;
+      if (tapeRafPrev !== null) {
+        const dt = (now - tapeRafPrev) / 1000;
+        const newTime = Math.max(0, AM.currentTime - dt * TAPE_SPEED);
+        AM.currentTime = newTime;
+        removeLinesBeyond(newTime * 1000);
+        const last = lb.lastElementChild;
+        if (last) last.scrollIntoView({ behavior: 'instant', block: 'end' });
+        if (newTime <= 0) { AM.currentTime = 0; stopTape(); return; }
+      }
+      tapeRafPrev = now;
+      tapeRafId = requestAnimationFrame(rewTick);
+    }
+
+    /* ── PAUSE — toque ── */
+    function togglePause() {
+      if (!playing || finished || closing || tapeMode) return;
+      if (isPaused) {
+        isPaused = false;
+        tzC.classList.remove('active');
+        lsEl.classList.remove('vhs-pause');
+        tzC.querySelector('.tz-icon').textContent = '⏸';
+        AM.play().catch(() => { });
+        lastLyrIdx = -1;
+        rafId = requestAnimationFrame(syncLoop);
+      } else {
+        isPaused = true;
+        tzC.classList.add('active');
+        lsEl.classList.add('vhs-pause');
+        tzC.querySelector('.tz-icon').textContent = '▶';
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        AM.pause();
+        hm.style.transition = 'none'; hm.className = 'k7'; hm.textContent = '⏸  PAUSADO';
+      }
+    }
+
+    /* ── FAST FORWARD — segurar ── */
+    function startFfwd() {
+      if (!playing || finished || closing || tapeMode === 'fwd') return;
+      if (tapeMode) stopTapeClean();
+      if (isPaused) { isPaused = false; tzC.classList.remove('active'); }
+      tapeMode = 'fwd';
+      tzR.classList.add('active');
+      lsEl.classList.add('vhs-fwd'); lsEl.classList.remove('vhs-pause');
+      hm.style.transition = 'none'; hm.className = 'k7'; hm.textContent = '▶▶  AVANÇANDO';
+      AM.playbackRate = TAPE_SPEED;
+      if (isPaused) AM.play().catch(() => { });
+      if (!rafId) rafId = requestAnimationFrame(syncLoop);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       BINDING — TOUCH + MOUSE
+       Laterais: hold para ativar, soltar para parar.
+       Centro:   tap para pausar/retomar.
+    ══════════════════════════════════════════════════════════ */
+    function bindHold(el, onStart, onStop) {
+      el.addEventListener('touchstart', e => { e.preventDefault(); onStart(); }, { passive: false });
+      el.addEventListener('touchend', e => { e.preventDefault(); onStop(); }, { passive: false });
+      el.addEventListener('touchcancel', e => { e.preventDefault(); onStop(); }, { passive: false });
+      el.addEventListener('mousedown', e => { e.preventDefault(); onStart(); });
+      el.addEventListener('mouseup', () => onStop());
+      el.addEventListener('mouseleave', () => { if (tapeMode) onStop(); });
+    }
+
+    function bindTap(el, fn) {
+      let moved = false;
+      el.addEventListener('touchstart', () => { moved = false; }, { passive: true });
+      el.addEventListener('touchmove', () => { moved = true; }, { passive: true });
+      el.addEventListener('touchend', e => { e.preventDefault(); if (!moved) fn(); }, { passive: false });
+      el.addEventListener('click', fn);
+    }
+
+    bindHold(tzL, startRewind, stopTape);
+    bindTap(tzC, togglePause);
+    bindHold(tzR, startFfwd, stopTape);
+
+    /* segurança global: soltar fora da zona para o tape */
+    document.addEventListener('mouseup', () => { if (tapeMode === 'rew' || tapeMode === 'fwd') stopTape(); });
+    document.addEventListener('touchend', () => { if (tapeMode === 'rew' || tapeMode === 'fwd') stopTape(); }, { passive: true });
+  </script>
 </body>
+
 </html>
